@@ -1,4 +1,4 @@
-name: NSO packages development CICD Pipeline
+name: NSO services delivery CICD
 
 on:
   push:
