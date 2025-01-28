@@ -1,0 +1,59 @@
+name: NSO packages development CICD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+
+    - name: Build project
+      run: echo "Building the project on self-hosted runner..."
+
+  test:
+    runs-on: self-hosted
+    needs: build
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+
+    - name: Run tests
+      run: echo "Running tests on self-hosted runner..."
+
+  deliver:
+    runs-on: self-hosted
+    needs: test
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+
+    - name: Deliver artifacts
+      run: echo "Delivering artifacts on self-hosted runner..."
+
+  deploy:
+    runs-on: self-hosted
+    needs: deliver
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+
+    - name: Deploy application
+      run: echo "Deploying application on self-hosted runner..."
+
+  cleanup:
+    runs-on: self-hosted
+    needs: deploy
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+
+    - name: Cleanup resources
+      run: echo "Cleaning up resources on self-hosted runner..."
