@@ -1,2 +1,11 @@
 # Ignoring the actions runner folder
 actions-runner/
+
+# Ignoring venv folders
+venv/
+
+# Ignoring rendered files
+pipeline/setup/docker-compose.yml
+
+# Ignoring python cache
+pipeline/utils/__pycache__/

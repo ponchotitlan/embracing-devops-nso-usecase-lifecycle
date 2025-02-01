@@ -1,0 +1,29 @@
+# NSO container configurations
+nso:
+  container_name: nso-pipeline
+  image: cisco-nso-prod:6.4
+  username: admin
+  password: admin
+  http_port: 80
+  https_port: 443
+  ssh_port: 22
+  cli_port: 1024
+
+# URLs for downloading our NEDs. Preferably from an Artifact Server - In this case we are using a public GitHub repository with free trial NEDs as releases
+downloads:
+  - https://github.com/ponchotitlan/dummy_artefact_repository/releases/download/iosxr/ncs-6.4-cisco-iosxr-7.61.tar.gz
+  - https://github.com/ponchotitlan/dummy_artefact_repository/releases/download/ios/ncs-6.4-cisco-ios-6.107.2.tar.gz
+  - https://github.com/ponchotitlan/dummy_artefact_repository/releases/download/asa/ncs-6.4-cisco-asa-6.18.20.tar.gz
+
+# Netsims to be used in the tests of this pipeline. The NED names must match the folders after extracting from the tar files downloaded
+netsims:
+  cisco-iosxr-cli-7.61:
+    - ciscolive-iosxr-dummy-01
+    - ciscolive-iosxr-dummy-02
+  cisco-ios-cli-6.107:
+    - ciscolive-ios-dummy-01
+  cisco-asa-cli-6.18:
+    - ciscolive-asa-dummy-01
+
+# Docker network name prefix
+container_network: net

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  nso_node:
+    container_name: {{ nso.container_name }}
+    image: {{ nso.image }}
+    ports:
+      - "{{ nso.http_port }}:80"
+      - "{{ nso.https_port }}:443"
+      - "{{ nso.cli_port }}:1024"
+    volumes:
+      - type: bind
+        source: ../../packages/
+        target: /nso/run/packages
+      - type: bind
+        source: ../preconfigs/
+        target: /tmp/nso
+    environment:
+      - EXTRA_ARGS=--with-package-reload
+      - ADMIN_USERNAME={{ nso.username }}
+      - ADMIN_PASSWORD={{ nso.password }}
+      - HTTP_ENABLE=true
+      - HTTPS_ENABLE=true
+    healthcheck:
+      test: ncs_cmd -c "wait-start 2"
+      interval: 5s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+    networks:
+      - {{ container_network }}
+
+networks:
+  {{ container_network }}:
+    driver: bridge
