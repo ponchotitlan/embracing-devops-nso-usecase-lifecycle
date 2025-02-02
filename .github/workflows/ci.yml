@@ -1,5 +1,8 @@
 name: Cisco Live 🤖🇳🇱 NSO services delivery
 
+on:
+  push:
+
 jobs:
   build:
     runs-on: self-hosted
