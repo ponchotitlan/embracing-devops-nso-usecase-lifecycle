@@ -15,7 +15,21 @@ jobs:
       run: |
         make run-nso-node
         make load-neds
-        make load-packages 
+        make load-packages
+
+  deliver-packages:
+    runs-on: self-hosted
+    needs: build
+    steps:
+    - name: 📦 Generate artifacts
+      run: |
+        make create-artifact-packages
+
+    - name: 📦 Upload services artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ciscolive_demo_packages
+        path: pipeline/preconfigs/ciscolive_demo_packages.tar.gz
 
   test:
     runs-on: self-hosted
@@ -26,20 +40,13 @@ jobs:
         make prepare-test-network
         make run-tests
 
-  deliver:
+  deliver-tests:
     runs-on: self-hosted
     needs: test
     steps:
     - name: 📦 Generate artifacts
       run: |
-        make create-artifact-packages
         make create-artifact-tests
-
-    - name: 📦 Upload services artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ciscolive_demo_packages
-        path: pipeline/preconfigs/ciscolive_demo_packages.tar.gz
 
     - name: 📦 Upload tests artifact
       uses: actions/upload-artifact@v4
@@ -78,7 +85,7 @@ jobs:
   cleanup:
     runs-on: self-hosted
     if: always()
-    needs: deliver
+    needs: [build,deliver-packages,test,deliver-tests]
     steps:
     - name: 🧹 Cleanup resources
       run: make clean
