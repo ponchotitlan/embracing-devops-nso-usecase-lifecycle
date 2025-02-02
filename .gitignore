@@ -9,3 +9,6 @@ pipeline/setup/docker-compose.yml
 
 # Ignoring python cache
 pipeline/utils/__pycache__/
+
+# Ignoring MacOS files
+.DS_Store
