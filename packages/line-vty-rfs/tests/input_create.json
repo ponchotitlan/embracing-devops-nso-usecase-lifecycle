@@ -1,0 +1,17 @@
+{
+    "line-vty-rfs:line-template-vty-line-vty-rfs": [
+      {
+        "device": "ciscolive-iosxr-dummy-02",
+        "line-template": [
+          {
+            "name": "test_vty_01",
+            "ip-group": "vty01",
+            "session-timeout": "5",
+            "exec-timeout": "10",
+            "transport-input": "ssh",
+            "transport-output": "telnet"
+          }
+        ]
+      }
+    ]
+  }

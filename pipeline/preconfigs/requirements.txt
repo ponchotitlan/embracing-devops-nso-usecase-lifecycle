@@ -1,0 +1,3 @@
+robotframework==6.1.1
+RESTinstance==1.3.0
+robotframework-jsonlibrary==0.5

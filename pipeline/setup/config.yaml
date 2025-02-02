@@ -4,9 +4,8 @@ nso:
   image: cisco-nso-prod:6.4
   username: admin
   password: admin
-  http_port: 80
-  https_port: 443
-  ssh_port: 22
+  http_port: 8080
+  https_port: 8888
   cli_port: 1024
 
 # ***************** URLs for downloading our NEDs ***************** #

@@ -1,0 +1,11 @@
+devices device ciscolive-iosxr-dummy-02
+ config
+  line template test_vty_01
+   access-class ingress vty01
+   transport input ssh
+   transport output ssh
+   exec-timeout 20
+   session-timeout 5
+  exit
+ !
+!

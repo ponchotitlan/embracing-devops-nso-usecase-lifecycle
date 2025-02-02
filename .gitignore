@@ -12,3 +12,13 @@ pipeline/utils/__pycache__/
 
 # Ignoring MacOS files
 .DS_Store
+
+# Ignoring package compilation folders
+packages/acl-rfs/load-dir/
+packages/line-vty-rfs/load-dir/
+
+# Ignoring test result files
+packages/acl-rfs/tests/*.html
+packages/acl-rfs/tests/*.xml
+packages/line-vty-rfs/tests/*.html
+packages/line-vty-rfs/tests/*.xml

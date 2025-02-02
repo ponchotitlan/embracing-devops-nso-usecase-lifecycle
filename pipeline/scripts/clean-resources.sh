@@ -28,4 +28,9 @@ for ned in $neds; do
     fi
 done
 
+# Remove all the files mounted in the mounted volume pipeline/conf except for the file ncs.conf
+rm -rf pipeline/conf/ssh/
+rm -rf pipeline/conf/ssl/
+rm -rf pipeline/conf/ncs.crypto_keys
+
 echo "[🧹] Clean sweep done!"

@@ -29,5 +29,3 @@ The usability of this service in NSO CLI would be the following:
 ```
 
 ---
-
-Crafted with 🧡  by [Alfonso Sandoval - Cisco](https://linkedin.com/in/asandovalros)

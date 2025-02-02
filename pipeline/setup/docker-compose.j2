@@ -5,8 +5,8 @@ services:
     container_name: {{ nso.container_name }}
     image: {{ nso.image }}
     ports:
-      - "{{ nso.http_port }}:80"
-      - "{{ nso.https_port }}:443"
+      - "{{ nso.http_port }}:8080"
+      - "{{ nso.https_port }}:8888"
       - "{{ nso.cli_port }}:1024"
     volumes:
       - type: bind
@@ -15,6 +15,9 @@ services:
       - type: bind
         source: ../preconfigs/
         target: /tmp/nso
+      - type: bind
+        source: ../conf/
+        target: /nso/etc
     environment:
       - EXTRA_ARGS=--with-package-reload
       - ADMIN_USERNAME={{ nso.username }}

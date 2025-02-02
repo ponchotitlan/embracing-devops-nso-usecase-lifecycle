@@ -1,7 +1,7 @@
-module router-rfs {
+module line-vty-rfs {
 
-  namespace "http://ciscolive.com/router-rfs";
-  prefix router-rfs;
+  namespace "http://ciscolive.com/line-vty-rfs";
+  prefix line-vty-rfs;
 
   import ietf-inet-types {
     prefix inet;
@@ -21,62 +21,10 @@ module router-rfs {
       "Awesome NetDevOps demo";
   }
 
-  list access-list-router-rfs {
-    description "Refactoring of rfs service for access lists provisioning on IOSXR devices";
-    uses ncs:service-data;
-    ncs:servicepoint access-list-router-rfs-servicepoint;
-
-    key "device";
-
-    leaf device {
-      tailf:info "Cisco IOSXR device";
-      tailf:cli-expose-key-name;
-      type leafref {
-        path "/ncs:devices/ncs:device/ncs:name";
-      }
-      mandatory true;
-    }
-
-    list access_list {
-      tailf:info "New Access-list";
-      key "name";
-
-      leaf name {
-        tailf:info "Access-list name";
-        type string;
-      }
-
-      list rule {
-        tailf:info "New rule within the Access-list";
-        key "id";
-
-        leaf id {
-          tailf:info "rule id";
-          type uint32;
-        }
-
-        leaf action {
-          tailf:info "Access type enumeration";
-          type enumeration {
-            enum "permit";
-            enum "deny";
-          }
-          mandatory true;
-        }
-
-        leaf destination {
-          tailf:info "Destination IP address";
-          type inet:ipv4-address;
-          mandatory true;
-        }        
-      }
-    }
-  }
-
-  list line-template-vty-router-rfs {
+  list line-template-vty-line-vty-rfs {
     description "RFS utilities for Cisco IOSXR line template provisioning";
     uses ncs:service-data;
-    ncs:servicepoint line-template-vty-router-rfs-servicepoint;
+    ncs:servicepoint line-template-vty-line-vty-rfs-servicepoint;
 
     key "device";
 
