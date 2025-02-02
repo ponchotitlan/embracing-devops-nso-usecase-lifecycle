@@ -47,6 +47,34 @@ jobs:
         name: ciscolive_demo_tests
         path: pipeline/preconfigs/ciscolive_demo_test.tar.gz
 
+  release:
+    runs-on: self-hosted
+    needs: test
+    if: github.ref == 'refs/heads/develop' && needs.test.result == 'success'
+    steps:
+      - name: ⭐️ Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            🏅 NSO rfs packages code release 🏅
+          draft: false
+          prerelease: false
+
+      - name: ⭐️ Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: pipeline/preconfigs/ciscolive_demo_packages.tar.gz
+          asset_name: ciscolive_demo_packages.tar.gz
+          asset_content_type: application/zip
+
   cleanup:
     runs-on: self-hosted
     if: always()
