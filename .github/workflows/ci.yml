@@ -36,19 +36,20 @@ jobs:
         make create-artifact-tests
 
     - name: 📦 Upload services artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ciscolive_demo_packages
         path: pipeline/preconfigs/ciscolive_demo_packages.tar.gz
 
     - name: 📦 Upload tests artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ciscolive_demo_tests
         path: pipeline/preconfigs/ciscolive_demo_test.tar.gz
 
   cleanup:
     runs-on: self-hosted
+    if: always()
     needs: deliver
     steps:
     - name: 🧹 Cleanup resources
