@@ -51,8 +51,5 @@ jobs:
     runs-on: self-hosted
     needs: build
     steps:
-    - name: Check out repository code
-      uses: actions/checkout@v3
-
     - name: 🧹 Cleanup resources
       run: make clean
