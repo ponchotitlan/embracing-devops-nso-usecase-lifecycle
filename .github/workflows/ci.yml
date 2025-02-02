@@ -17,35 +17,23 @@ jobs:
         make load-neds
         make load-packages 
 
-  # test:
-  #   runs-on: self-hosted
-  #   needs: build
-  #   steps:
-  #   - name: Check out repository code
-  #     uses: actions/checkout@v3
+  test:
+    runs-on: self-hosted
+    needs: build
+    steps:
+    - name: 🤖 Run tests
+      run: |
+        make prepare-test-network
+        make run-tests
 
-  #   - name: Run tests
-  #     run: echo "Running tests on self-hosted runner..."
-
-  # deliver:
-  #   runs-on: self-hosted
-  #   needs: test
-  #   steps:
-  #   - name: Check out repository code
-  #     uses: actions/checkout@v3
-
-  #   - name: Deliver artifacts
-  #     run: echo "Delivering artifacts on self-hosted runner..."
-
-  # deploy:
-  #   runs-on: self-hosted
-  #   needs: deliver
-  #   steps:
-  #   - name: Check out repository code
-  #     uses: actions/checkout@v3
-
-  #   - name: Deploy application
-  #     run: echo "Deploying application on self-hosted runner..."
+  deliver:
+    runs-on: self-hosted
+    needs: build
+    steps:
+    - name: 📦 Deliver artifacts
+      run: |
+        make create-artifact-packages
+        make create-artifact-tests
 
   cleanup:
     runs-on: self-hosted
