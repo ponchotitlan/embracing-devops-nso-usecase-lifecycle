@@ -28,7 +28,7 @@ jobs:
 
   deliver:
     runs-on: self-hosted
-    needs: build
+    needs: test
     steps:
     - name: 📦 Deliver artifacts
       run: |
@@ -37,7 +37,7 @@ jobs:
 
   cleanup:
     runs-on: self-hosted
-    needs: build
+    needs: deliver
     steps:
     - name: 🧹 Cleanup resources
       run: make clean
