@@ -47,12 +47,12 @@ jobs:
   #   - name: Deploy application
   #     run: echo "Deploying application on self-hosted runner..."
 
-  # cleanup:
-  #   runs-on: self-hosted
-  #   needs: deploy
-  #   steps:
-  #   - name: Check out repository code
-  #     uses: actions/checkout@v3
+  cleanup:
+    runs-on: self-hosted
+    needs: build
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
 
-  #   - name: Cleanup resources
-  #     run: echo "Cleaning up resources on self-hosted runner..."
+    - name: 🧹 Cleanup resources
+      run: make clean
