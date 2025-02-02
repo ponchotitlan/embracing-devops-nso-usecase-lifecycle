@@ -22,3 +22,6 @@ packages/acl-rfs/tests/*.html
 packages/acl-rfs/tests/*.xml
 packages/line-vty-rfs/tests/*.html
 packages/line-vty-rfs/tests/*.xml
+
+# Ignoring artifacts in the mounted volume pipeline/preconfigs
+pipeline/preconfigs/*.tar.gz
