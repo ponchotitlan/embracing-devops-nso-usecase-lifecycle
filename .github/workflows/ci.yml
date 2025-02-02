@@ -50,7 +50,7 @@ jobs:
   release:
     runs-on: self-hosted
     needs: test
-    if: github.ref == 'refs/heads/develop' && needs.test.result == 'success'
+    if: github.ref == 'refs/heads/main' && needs.test.result == 'success'
     steps:
       - name: ⭐️ Create Release
         id: create_release
