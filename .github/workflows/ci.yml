@@ -1,12 +1,4 @@
-name: NSO services delivery CICD
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+name: Cisco Live 🤖🇳🇱 NSO services delivery
 
 jobs:
   build:
@@ -15,45 +7,48 @@ jobs:
     - name: Check out repository code
       uses: actions/checkout@v3
 
-    - name: Build project
-      run: echo "Building the project on self-hosted runner..."
+    - name: 🛠️ Build project
+      run: |
+        make run-nso-node
+        make load-neds
+        make load-packages 
 
-  test:
-    runs-on: self-hosted
-    needs: build
-    steps:
-    - name: Check out repository code
-      uses: actions/checkout@v3
+  # test:
+  #   runs-on: self-hosted
+  #   needs: build
+  #   steps:
+  #   - name: Check out repository code
+  #     uses: actions/checkout@v3
 
-    - name: Run tests
-      run: echo "Running tests on self-hosted runner..."
+  #   - name: Run tests
+  #     run: echo "Running tests on self-hosted runner..."
 
-  deliver:
-    runs-on: self-hosted
-    needs: test
-    steps:
-    - name: Check out repository code
-      uses: actions/checkout@v3
+  # deliver:
+  #   runs-on: self-hosted
+  #   needs: test
+  #   steps:
+  #   - name: Check out repository code
+  #     uses: actions/checkout@v3
 
-    - name: Deliver artifacts
-      run: echo "Delivering artifacts on self-hosted runner..."
+  #   - name: Deliver artifacts
+  #     run: echo "Delivering artifacts on self-hosted runner..."
 
-  deploy:
-    runs-on: self-hosted
-    needs: deliver
-    steps:
-    - name: Check out repository code
-      uses: actions/checkout@v3
+  # deploy:
+  #   runs-on: self-hosted
+  #   needs: deliver
+  #   steps:
+  #   - name: Check out repository code
+  #     uses: actions/checkout@v3
 
-    - name: Deploy application
-      run: echo "Deploying application on self-hosted runner..."
+  #   - name: Deploy application
+  #     run: echo "Deploying application on self-hosted runner..."
 
-  cleanup:
-    runs-on: self-hosted
-    needs: deploy
-    steps:
-    - name: Check out repository code
-      uses: actions/checkout@v3
+  # cleanup:
+  #   runs-on: self-hosted
+  #   needs: deploy
+  #   steps:
+  #   - name: Check out repository code
+  #     uses: actions/checkout@v3
 
-    - name: Cleanup resources
-      run: echo "Cleaning up resources on self-hosted runner..."
+  #   - name: Cleanup resources
+  #     run: echo "Cleaning up resources on self-hosted runner..."
