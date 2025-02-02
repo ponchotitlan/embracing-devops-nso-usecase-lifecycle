@@ -2,6 +2,7 @@ name: Cisco Live 🤖🇳🇱 NSO services delivery
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   build:
