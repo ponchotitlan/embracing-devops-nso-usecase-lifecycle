@@ -13,19 +13,17 @@ on:
         required: false
         default: 'true'
 
-env:
-  DELIVER_ARTIFACTS: ${{ github.event.inputs.deliver-artifacts || 'true' }}
-  RUN_TESTS: ${{ github.event.inputs.run-tests || 'true' }}
-
 jobs:
+  set-workflow-options:
+    runs-on: self-hosted
+    outputs:
+      DELIVER_ARTIFACTS: ${{ github.event.inputs.deliver-artifacts || 'true' }}
+      RUN_TESTS: ${{ github.event.inputs.run-tests || 'true' }}
+
   build:
     runs-on: self-hosted
+    needs: set-workflow-options
     steps:
-
-    - name: Testtt
-      run: echo "My vars are ${{ env.DELIVER_ARTIFACTS }} and ${{ env.RUN_TESTS }}"
-
-
     - name: Check out repository code
       uses: actions/checkout@v3
 
@@ -37,10 +35,8 @@ jobs:
 
   deliver-packages:
     runs-on: self-hosted
-    env:
-      DELIVER_ARTIFACTS: ${{ github.event.inputs.deliver-artifacts || 'true' }}
-    if: ${{ DELIVER_ARTIFACTS == 'true' }}
     needs: build
+    if: ${{ set-workflow-options.outputs.DELIVER_ARTIFACTS == 'true' }}
     steps:
     - name: 📦 Generate artifacts
       run: |
