@@ -29,7 +29,7 @@ get-current-release-tag:
 	@pipeline/scripts/get-latest-git-tag.sh
 
 calculate-new-release-tag:
-	@pipeline/scripts/increment-git-tag-version.sh ${{ steps.get_latest_tag.outputs.tag }}
+	@pipeline/scripts/increment-git-tag-version.sh ${{ env.tag }}
 
 clean:
 	@pipeline/scripts/clean-resources.sh

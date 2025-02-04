@@ -7,6 +7,9 @@
 #   ./get-latest-git-tag.sh
 
 latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+if [ -z "$latest_tag" ]; then
+  latest_tag="0.0.1"
+fi
 echo "Latest tag: $latest_tag"
 # Set the output for GitHub Actions
-echo "::set-output name=tag::$latest_tag"
+echo "tag=$latest_tag" >> $GITHUB_ENV

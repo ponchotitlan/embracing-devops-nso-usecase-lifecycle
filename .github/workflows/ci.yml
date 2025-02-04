@@ -71,10 +71,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.increment_version.outputs.new_version }}
-          release_name: Release ${{ steps.increment_version.outputs.new_version }}
+          tag_name: ${{ env.new_version }}
+          release_name: Release v.${{ env.new_version }}
           body: |
-            🏅 NSO rfs packages code release v.${{ steps.increment_version.outputs.new_version }} 🏅
+            🏅 NSO rfs packages code release v.${{ env.new_version }} 🏅
           draft: false
           prerelease: false
 
