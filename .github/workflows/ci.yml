@@ -32,7 +32,7 @@ jobs:
 
   deliver-packages:
     runs-on: self-hosted
-    if: ${{ env.DELIVER_ARTIFACTS == 'true' }}
+    if: ${{ DELIVER_ARTIFACTS == 'true' }}
     needs: build
     steps:
     - name: 📦 Generate artifacts
@@ -47,7 +47,7 @@ jobs:
 
   test:
     runs-on: self-hosted
-    if: ${{ env.RUN_TESTS == 'true' }}
+    if: ${{ RUN_TESTS == 'true' }}
     needs: build
     steps:
     - name: 🤖 Run tests
@@ -57,7 +57,7 @@ jobs:
 
   deliver-tests:
     runs-on: self-hosted
-    if: ${{ env.RUN_TESTS == 'true' && env.DELIVER_ARTIFACTS == 'true' }}
+    if: ${{ RUN_TESTS == 'true' && DELIVER_ARTIFACTS == 'true' }}
     needs: test
     steps:
     - name: 📦 Generate artifacts
