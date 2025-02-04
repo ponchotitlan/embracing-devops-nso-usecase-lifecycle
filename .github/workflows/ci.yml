@@ -7,11 +7,19 @@ on:
       run-tests:
         description: '🤖 Run Robot tests'
         required: false
-        default: 'true'
+        default: 'yes'
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
       deliver-artifacts:
         description: '📦 Generate artifacts'
         required: false
-        default: 'true'
+        default: 'yes'
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
 
 jobs:
   set-workflow-options:
@@ -24,8 +32,8 @@ jobs:
       id: set-outputs
       run: |
         echo "Setting variables ..."
-        echo "::set-output name=DELIVER_ARTIFACTS::${{ github.event.inputs.deliver-artifacts || 'true' }}"
-        echo "::set-output name=RUN_TESTS::${{ github.event.inputs.run-tests || 'true' }}"
+        echo "::set-output name=DELIVER_ARTIFACTS::${{ github.event.inputs.deliver-artifacts || 'yes' }}"
+        echo "::set-output name=RUN_TESTS::${{ github.event.inputs.run-tests || 'yes' }}"
 
   build:
     runs-on: self-hosted
@@ -43,7 +51,7 @@ jobs:
   deliver-packages:
     runs-on: self-hosted
     needs: [set-workflow-options,build]
-    if: ${{ needs.set-workflow-options.outputs.DELIVER_ARTIFACTS == 'true' }}
+    if: ${{ needs.set-workflow-options.outputs.DELIVER_ARTIFACTS == 'yes' }}
     steps:
     - name: 📦 Generate artifacts
       run: |
@@ -57,8 +65,8 @@ jobs:
 
   test:
     runs-on: self-hosted
-    # if: ${{ env.RUN_TESTS == 'true' }}
-    needs: build
+    needs: [set-workflow-options,build]
+    if: ${{ needs.set-workflow-options.outputs.RUN_TESTS == 'yes' }}
     steps:
     - name: 🤖 Run tests
       run: |
@@ -82,8 +90,8 @@ jobs:
 
   release:
     runs-on: self-hosted
-    needs: test
-    if: github.ref == 'refs/heads/main' && needs.test.result == 'success'
+    needs: [set-workflow-options,test]
+    if: github.ref == 'refs/heads/main' && needs.test.result == 'success' && needs.set-workflow-options.outputs.DELIVER_ARTIFACTS == 'yes'
     steps:
       - name: ⭐️ Get the latest tag
         id: get_latest_tag
