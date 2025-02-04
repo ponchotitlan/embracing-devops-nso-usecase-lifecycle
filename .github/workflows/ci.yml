@@ -3,6 +3,15 @@ name: Cisco Live 🤖🇳🇱 NSO services delivery
 on:
   push:
   workflow_dispatch:
+    inputs:
+      run_tests:
+        description: 'Run Robot tests'
+        required: false
+        default: 'true'
+      deliver-artifacts:
+        description: 'Generate artifacts based on packages and tests'
+        required: false
+        default: 'true'
 
 jobs:
   build:
@@ -19,6 +28,7 @@ jobs:
 
   deliver-packages:
     runs-on: self-hosted
+    if: ${{ github.event.inputs.deliver-artifacts == 'true' }}
     needs: build
     steps:
     - name: 📦 Generate artifacts
@@ -33,6 +43,7 @@ jobs:
 
   test:
     runs-on: self-hosted
+    if: ${{ github.event.inputs.run_tests == 'true' }}
     needs: build
     steps:
     - name: 🤖 Run tests
@@ -42,6 +53,7 @@ jobs:
 
   deliver-tests:
     runs-on: self-hosted
+    if: ${{ github.event.inputs.run_tests == 'true' && github.event.inputs.deliver-artifacts == 'true' }}
     needs: test
     steps:
     - name: 📦 Generate artifacts
@@ -74,7 +86,7 @@ jobs:
           tag_name: ${{ env.new_version }}
           release_name: Release v.${{ env.new_version }}
           body: |
-            🏅 NSO rfs packages code release v.${{ env.new_version }} 🏅
+            🏅 Automated NSO rfs packages code release v.${{ env.new_version }} 🏅
           draft: false
           prerelease: false
 
