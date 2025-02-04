@@ -38,6 +38,7 @@ jobs:
   deliver-packages:
     runs-on: self-hosted
     # if: ${{ env.DELIVER_ARTIFACTS == 'true' }}
+    if: ${{ env.RUN_TESTS == 'true' }}
     needs: build
     steps:
     - name: 📦 Generate artifacts
