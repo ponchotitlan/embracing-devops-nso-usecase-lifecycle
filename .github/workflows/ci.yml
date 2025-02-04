@@ -13,6 +13,10 @@ on:
         required: false
         default: 'true'
 
+env:
+  DELIVER_ARTIFACTS: ${{ github.event.inputs.deliver-artifacts || 'true' }}
+  RUN_TESTS: ${{ github.event.inputs.run-tests || 'true' }}
+
 jobs:
   build:
     runs-on: self-hosted
@@ -28,8 +32,6 @@ jobs:
 
   deliver-packages:
     runs-on: self-hosted
-    env:
-      DELIVER_ARTIFACTS: ${{ github.event.inputs.deliver-artifacts || 'true' }}
     if: ${{ env.DELIVER_ARTIFACTS == 'true' }}
     needs: build
     steps:
@@ -45,8 +47,6 @@ jobs:
 
   test:
     runs-on: self-hosted
-    env:
-      RUN_TESTS: ${{ github.event.inputs.run-tests || 'true' }}
     if: ${{ env.RUN_TESTS == 'true' }}
     needs: build
     steps:
@@ -57,9 +57,6 @@ jobs:
 
   deliver-tests:
     runs-on: self-hosted
-    env:
-      RUN_TESTS: ${{ github.event.inputs.run-tests || 'true' }}
-      DELIVER_ARTIFACTS: ${{ github.event.inputs.deliver-artifacts || 'true' }}
     if: ${{ env.RUN_TESTS == 'true' && env.DELIVER_ARTIFACTS == 'true' }}
     needs: test
     steps:
