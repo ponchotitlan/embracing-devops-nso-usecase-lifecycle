@@ -59,16 +59,22 @@ jobs:
     needs: test
     if: github.ref == 'refs/heads/main' && needs.test.result == 'success'
     steps:
+      - name: ⭐️ Get the latest tag
+        id: get_latest_tag
+        run: make get-current-release-tag
+      - name: ⭐️ Increment version
+        id: increment_version
+        run: make calculate-new-release-tag
       - name: ⭐️ Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
+          tag_name: ${{ steps.increment_version.outputs.new_version }}
+          release_name: Release ${{ steps.increment_version.outputs.new_version }}
           body: |
-            🏅 NSO rfs packages code release 🏅
+            🏅 NSO rfs packages code release v.${{ steps.increment_version.outputs.new_version }} 🏅
           draft: false
           prerelease: false
 

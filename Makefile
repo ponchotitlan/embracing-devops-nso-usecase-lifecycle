@@ -1,4 +1,4 @@
-.PHONY: run-nso-node load-neds load-packages prepare-test-network run-tests create-artifact-packages create-artifact-tests clean
+.PHONY: run-nso-node load-neds load-packages prepare-test-network run-tests create-artifact-packages create-artifact-tests get-current-release-tag calculate-new-release-tag clean
 
 run-nso-node:
 	@pipeline/scripts/run-nso-node.sh
@@ -24,6 +24,12 @@ create-artifact-packages:
 
 create-artifact-tests:
 	@pipeline/scripts/create-artifact-tests.sh nso_node
+
+get-current-release-tag:
+	@pipeline/scripts/get-latest-git-tag.sh
+
+calculate-new-release-tag:
+	@pipeline/scripts/increment-git-tag-version.sh ${{ steps.get_latest_tag.outputs.tag }}
 
 clean:
 	@pipeline/scripts/clean-resources.sh
