@@ -6,6 +6,8 @@
 # Usage:
 #   ./get-latest-git-tag.sh
 
+latest_rev=$(git rev-list --tags --max-count=1)
+latest_tag_standalone=$(git describe --tags)
 latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
 if [ -z "$latest_tag" ]; then
   latest_tag="0.0.1"
