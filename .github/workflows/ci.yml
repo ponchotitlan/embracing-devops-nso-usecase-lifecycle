@@ -64,7 +64,7 @@ jobs:
         run: make get-current-release-tag
       - name: ⭐️ Increment version
         id: increment_version
-        run: make calculate-new-release-tag
+        run: make calculate-new-release-tag VERSION=${{ env.tag }}
       - name: ⭐️ Create Release
         id: create_release
         uses: actions/create-release@v1
