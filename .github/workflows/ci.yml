@@ -4,12 +4,12 @@ on:
   push:
   workflow_dispatch:
     inputs:
-      run_tests:
-        description: 'Run Robot tests'
+      run-tests:
+        description: '🤖 Run Robot tests'
         required: false
         default: 'true'
       deliver-artifacts:
-        description: 'Generate artifacts based on packages and tests'
+        description: '📦 Generate artifacts'
         required: false
         default: 'true'
 
@@ -28,7 +28,9 @@ jobs:
 
   deliver-packages:
     runs-on: self-hosted
-    if: ${{ github.event.inputs.deliver-artifacts == 'true' }}
+    env:
+      DELIVER_ARTIFACTS: ${{ github.event.inputs.deliver-artifacts || 'true' }}
+    if: ${{ env.DELIVER_ARTIFACTS == 'true' }}
     needs: build
     steps:
     - name: 📦 Generate artifacts
@@ -43,7 +45,9 @@ jobs:
 
   test:
     runs-on: self-hosted
-    if: ${{ github.event.inputs.run_tests == 'true' }}
+    env:
+      RUN_TESTS: ${{ github.event.inputs.run-tests || 'true' }}
+    if: ${{ env.RUN_TESTS == 'true' }}
     needs: build
     steps:
     - name: 🤖 Run tests
@@ -53,7 +57,10 @@ jobs:
 
   deliver-tests:
     runs-on: self-hosted
-    if: ${{ github.event.inputs.run_tests == 'true' && github.event.inputs.deliver-artifacts == 'true' }}
+    env:
+      RUN_TESTS: ${{ github.event.inputs.run-tests || 'true' }}
+      DELIVER_ARTIFACTS: ${{ github.event.inputs.deliver-artifacts || 'true' }}
+    if: ${{ env.RUN_TESTS == 'true' && env.DELIVER_ARTIFACTS == 'true' }}
     needs: test
     steps:
     - name: 📦 Generate artifacts
