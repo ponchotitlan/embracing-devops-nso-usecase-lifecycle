@@ -5,7 +5,7 @@
 #
 # Usage:
 #   ./get-latest-git-tag.sh
-
+git fetch --tags
 latest_rev=$(git rev-list --tags --max-count=1)
 latest_tag_standalone=$(git describe --tags)
 latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
