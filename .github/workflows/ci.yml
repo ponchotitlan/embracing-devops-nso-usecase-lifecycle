@@ -17,8 +17,15 @@ jobs:
   set-workflow-options:
     runs-on: self-hosted
     outputs:
-      DELIVER_ARTIFACTS: ${{ github.event.inputs.deliver-artifacts || 'true' }}
-      RUN_TESTS: ${{ github.event.inputs.run-tests || 'true' }}
+      DELIVER_ARTIFACTS: ${{ steps.set-outputs.outputs.DELIVER_ARTIFACTS }}
+      RUN_TESTS: ${{ steps.set-outputs.outputs.RUN_TESTS }}
+    steps:
+    - name: Set output variables
+      id: set-outputs
+      run: |
+        echo "Setting variables ..."
+        echo "::set-output name=DELIVER_ARTIFACTS::${{ github.event.inputs.deliver-artifacts || 'true' }}"
+        echo "::set-output name=RUN_TESTS::${{ github.event.inputs.run-tests || 'true' }}"
 
   build:
     runs-on: self-hosted
