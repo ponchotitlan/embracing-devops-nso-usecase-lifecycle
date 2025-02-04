@@ -42,8 +42,8 @@ jobs:
 
   deliver-packages:
     runs-on: self-hosted
-    needs: build
-    if: ${{ set-workflow-options.outputs.DELIVER_ARTIFACTS == 'true' }}
+    needs: [set-workflow-options,build]
+    if: ${{ needs.set-workflow-options.outputs.DELIVER_ARTIFACTS == 'true' }}
     steps:
     - name: 📦 Generate artifacts
       run: |
