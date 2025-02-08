@@ -90,3 +90,4 @@ This CI pipeline is enabled to run manually with on-demand custom parameters. Fo
 
 Click on the name, and a blue banner with the text ```This workflow has a workflow_dispatch event trigger.``` shall appear. Click on the ```Run workflow``` button, and the available manual options shall appear in a pop-up window.
 
+
