@@ -20,6 +20,8 @@ __author__ = "@ponchotitlan"
 import os
 import sys
 import yaml
+import random
+import string
 import subprocess
 from jinja2 import Environment, FileSystemLoader
 
@@ -36,21 +38,15 @@ def get_current_branch() -> str:
         return 'local'
     
     
-def get_latest_commit_hash() -> str:
-    """Get the latest commit hash."""
-    try:
-        commit_hash = subprocess.check_output(
-            ['git', 'rev-parse', 'HEAD'],
-            stderr=subprocess.DEVNULL
-        ).strip().decode('utf-8')
-        return commit_hash
-    except subprocess.CalledProcessError:
-        return '0000'
+def generate_random_string():
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choices(characters, k=5))
+    return random_string
     
     
 def get_git_suffix() -> str:
-    """Returns a suffix in the following format: _{get_current_branch()}_{get_latest_commit_hash()[0:4]}"""
-    return f"_{get_current_branch()}_{get_latest_commit_hash()[0:4]}"
+    """Returns a suffix in the following format: _{get_current_branch()}_{generate_random_string()}"""
+    return f"_{get_current_branch()}_{generate_random_string()[0:4]}"
 
 
 def render_template(template_dir, template_file, yaml_file, output_extension): 
@@ -61,7 +57,6 @@ def render_template(template_dir, template_file, yaml_file, output_extension):
     # Appending of the suffix to the records nso.container_name and container_network
     try:
         yaml_data['nso']['container_name'] = f"{yaml_data['nso']['container_name']}{get_git_suffix()}"
-        yaml_data['container_network'] = f"{yaml_data['container_network']}{get_git_suffix()}"
     except:
         pass
 
