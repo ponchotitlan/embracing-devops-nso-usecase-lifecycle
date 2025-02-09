@@ -16,6 +16,11 @@ module acl-rfs {
   description
     "Small rfs package for demonstration purposes";
 
+  revision 2025-02-08 {
+    description
+      "Adding logging options for each line";
+  }
+
   revision 2025-02-02 {
     description
       "Awesome NetDevOps demo";
@@ -68,6 +73,12 @@ module acl-rfs {
           tailf:info "Destination IP address";
           type inet:ipv4-address;
           mandatory true;
+        }
+
+        leaf log {
+          tailf:info "Logging option";
+          type boolean;
+          default false;
         }        
       }
     }
