@@ -12,7 +12,16 @@ run_robot_test(){
     local container_name="$1"
     local service_name="$2"
 
-    docker exec -i $container_name bash -lc "cd /nso/run/packages/$service_name/tests && robot $service_name.robot"
+    local TOKEN_SUCCESS="0 failed"
+    local output=$(docker exec -i $container_name bash -lc "cd /nso/run/packages/$service_name/tests && robot $service_name.robot")
+
+    if echo "$output" | grep -q "$TOKEN_SUCCESS"; then
+        # This test passed!
+        echo 1
+    else
+        # This test didn't pass!
+        echo 0
+    fi
 }
 
 YAML_FILE_CONFIG="pipeline/setup/config.yaml"
@@ -24,8 +33,6 @@ if [ -z "$1" ]; then
     echo "Usage: $0 <container_name> ..."
     exit 1
 fi
-
-echo "##### [🤖] Executing Robot tests of each service.... #####"
 
 # Extract the name of the container and remove quotes
 CONTAINER_NAME_PATH=".services.$1.container_name"
@@ -39,6 +46,7 @@ ned_packages=$(yq "$NEDS_PATH" "$YAML_FILE_CONFIG")
 all_packages=($(ls -d "$PACKAGES_DIR"/*/ | xargs -n 1 basename))
 
 # Iterate over each folder and check if it's in the excluded list
+all_tests_passed=1
 for package in "${all_packages[@]}"; do
 
     is_ned=0
@@ -51,8 +59,19 @@ for package in "${all_packages[@]}"; do
     done
 
     if [[ $is_ned == 0 ]]; then
-        run_robot_test $container_name $package
+        this_test_pass=$(run_robot_test $container_name $package)
+
+        # If at least one test didn't pass. This job is declared a failure
+        if [[ $this_test_pass == 0 ]]; then
+            all_tests_passed=0
+        fi
     fi
 done
 
-echo "[🤖] Robot test cases done!"
+if [[ $all_tests_passed == 0 ]]; then
+    # The job failed
+    echo "failed"
+else
+    # The job is successful
+    echo "pass"
+fi
