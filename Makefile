@@ -17,7 +17,13 @@ prepare-test-network:
 
 run-tests:
 	@pipeline/scripts/install-testing-libraries.sh nso_node
-	@pipeline/scripts/run-robot-tests.sh nso_node
+	status=$$(pipeline/scripts/run-robot-tests.sh nso_node); \
+	if [ "$$status" = "failed" ]; then \
+		echo "🤖❌ At least one test failed!"; \
+		exit 1; \
+	else \
+		echo "🤖✅ All tests were successful!"; \
+	fi
 
 create-artifact-packages:
 	@pipeline/scripts/create-artifact-packages.sh nso_node
