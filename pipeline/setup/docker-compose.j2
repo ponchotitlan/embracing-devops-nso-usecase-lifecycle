@@ -2,10 +2,10 @@ services:
   {{ nso.container_name }}:
     container_name: {{ nso.container_name }}
     image: {{ nso.image }}
-    ports:
-      - "{{ nso.http_port }}:8080"
-      - "{{ nso.https_port }}:8888"
-      - "{{ nso.cli_port }}:1024"
+    # ports:
+    #   - "{{ nso.http_port }}:8080"
+    #   - "{{ nso.https_port }}:8888"
+    #   - "{{ nso.cli_port }}:1024"
     volumes:
       - type: bind
         source: ../../packages/
