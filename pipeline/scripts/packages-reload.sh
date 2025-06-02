@@ -6,9 +6,15 @@
 # Usage:
 #   ./packages-reload.sh
 
+TOKEN_FAILED="result false"
 NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
 container_name=$("$NSO_DOCKER_NAME_GEN")
 
-echo "##### [🔄] Performing packages reload in container $container_name .... #####"
-docker exec -i $container_name bash -lc "echo 'packages reload' | ncs_cli -Cu admin"
-echo "[🔄] Packages reload done!"
+reload_output=$(docker exec -i $container_name bash -lc "echo 'packages reload' | ncs_cli -Cu admin")
+if echo "$reload_output" | grep -q "$TOKEN_FAILED"; then
+    # This test passed!
+    echo "failed"
+else
+    # This test didn't pass!
+    echo "pass"
+fi
