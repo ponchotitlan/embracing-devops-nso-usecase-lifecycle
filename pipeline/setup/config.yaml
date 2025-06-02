@@ -1,6 +1,6 @@
 # ***************** NSO container configurations ***************** #
 nso:
-  container_name: nso-pipeline
+  container_prefix: nso-ci-
   image: cisco-nso-prod:6.4
   username: admin
   password: admin
@@ -25,6 +25,3 @@ netsims:
     - ciscolive-ios-dummy-01
   cisco-asa-cli-6.18:
     - ciscolive-asa-dummy-01
-
-# ***************** Docker network name prefix ***************** #
-container_network: net

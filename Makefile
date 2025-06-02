@@ -5,19 +5,19 @@ run-nso-node:
 
 load-neds:
 	@pipeline/scripts/download-neds.sh
-	@pipeline/scripts/packages-reload.sh nso_node
+	@pipeline/scripts/packages-reload.sh
 
 load-packages:
-	@pipeline/scripts/compile-packages.sh nso_node
-	@pipeline/scripts/packages-reload.sh nso_node
+	@pipeline/scripts/compile-packages.sh
+	@pipeline/scripts/packages-reload.sh
 
 prepare-test-network:
-	@pipeline/scripts/load-preconfigs.sh nso_node
-	@pipeline/scripts/load-netsims.sh nso_node
+	@pipeline/scripts/load-preconfigs.sh
+	@pipeline/scripts/load-netsims.sh
 
 run-tests:
-	@pipeline/scripts/install-testing-libraries.sh nso_node
-	status=$$(pipeline/scripts/run-robot-tests.sh nso_node); \
+	@pipeline/scripts/install-testing-libraries.sh
+	status=$$(pipeline/scripts/run-robot-tests.sh); \
 	if [ "$$status" = "failed" ]; then \
 		echo "🤖❌ At least one test failed!"; \
 		exit 1; \
@@ -26,10 +26,10 @@ run-tests:
 	fi
 
 create-artifact-packages:
-	@pipeline/scripts/create-artifact-packages.sh nso_node
+	@pipeline/scripts/create-artifact-packages.sh
 
 create-artifact-tests:
-	@pipeline/scripts/create-artifact-tests.sh nso_node
+	@pipeline/scripts/create-artifact-tests.sh
 
 get-current-release-tag:
 	@pipeline/scripts/get-latest-git-tag.sh

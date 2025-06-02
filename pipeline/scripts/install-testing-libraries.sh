@@ -4,21 +4,13 @@
 # Author: @ponchotitlan
 #
 # Usage:
-#   ./install-testing-libraries.sh <service-name>
-
-YAML_FILE_DOCKER="pipeline/setup/docker-compose.yml"
-
-if [ -z "$1" ]; then
-    echo "Usage: $0 <cservice_name> ..."
-    exit 1
-fi
+#   ./install-testing-libraries.sh
 
 echo "##### [🏃🏻‍♀️] Installing the libraries required for testing .... #####"
 
-# Extract the name of the container and remove quotes
-CONTAINER_NAME_PATH=".services.$1.container_name"
-container_name=$(yq "$CONTAINER_NAME_PATH" "$YAML_FILE_DOCKER")
-container_name=$(echo "$container_name" | tr -d '"')
+# Extract the name of the container
+NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
+container_name=$("$NSO_DOCKER_NAME_GEN")
 
 docker exec -i $container_name bash -lc "cd /tmp/nso/ && pip install -r requirements.txt"
 

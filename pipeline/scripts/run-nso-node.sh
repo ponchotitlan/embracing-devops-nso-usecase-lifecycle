@@ -6,23 +6,21 @@
 # Usage:
 #   ./run-nso-node.sh
 
-YAML_FILE="pipeline/setup/docker-compose.yml"
-COMPOSE_SERVICE="nso_node"
-CONTAINER_NAME_PATH=".services.nso_node.container_name"
+NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
+DOCKER_COMPOSE_TEMPLATE_RENDER="pipeline/scripts/render-docker-compose-template.sh"
+
+compose_service=$("$NSO_DOCKER_NAME_GEN")
+compose_file="pipeline/setup/docker-compose-${compose_service}.yml"
 
 # Render a new docker-compose file and spin the service
 echo "##### [🐋] Rendering docker-compose template .... #####"
-python pipeline/utils/docker_compose_render.py pipeline/setup/docker-compose.j2 pipeline/setup/config.yaml yml
-docker-compose -f pipeline/setup/docker-compose.yml up $COMPOSE_SERVICE -d
-
-# Extract the name of the containerand remove quotes
-container_name=$(yq "$CONTAINER_NAME_PATH" "$YAML_FILE")
-container_name=$(echo "$container_name" | tr -d '"')
+bash "$DOCKER_COMPOSE_TEMPLATE_RENDER"
+docker compose -f $compose_file up $compose_service -d
 
 # Poll the health status
-until [ "$(docker inspect --format='{{json .State.Health.Status}}' $container_name)" == "\"healthy\"" ]; do
-    echo "Waiting for $container_name to become healthy..."
+until [ "$(docker inspect --format='{{json .State.Health.Status}}' $compose_service)" == "\"healthy\"" ]; do
+    echo "Waiting for $compose_service to become healthy..."
     sleep 10
 done
 
-echo "[🐋] $container_name is healthy and ready!"
+echo "[🐋] $compose_service is healthy and ready!"
