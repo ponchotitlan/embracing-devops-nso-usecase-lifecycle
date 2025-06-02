@@ -4,7 +4,7 @@
 # Author: @ponchotitlan
 #
 # Usage:
-#   ./compile-packages.sh <service-name>
+#   ./compile-packages.sh
 
 # This function issues the make clean all command on the src/directory of the package specified.
 # It is assumed that the package already exists on the /packages dir of this repository and that this dir is a mounted volume in the NSO container provided.
@@ -18,21 +18,14 @@ compile_package(){
 }
 
 YAML_FILE_CONFIG="pipeline/setup/config.yaml"
-YAML_FILE_DOCKER="pipeline/setup/docker-compose.yml"
 PACKAGES_DIR="packages"
 NEDS_PATH=".netsims | keys"
 
-if [ -z "$1" ]; then
-    echo "Usage: $0 <container_name> ..."
-    exit 1
-fi
-
 echo "##### [🛠️] Compiling the services in this repository and skipping the NEDs.... #####"
 
-# Extract the name of the container and remove quotes
-CONTAINER_NAME_PATH=".services.$1.container_name"
-container_name=$(yq "$CONTAINER_NAME_PATH" "$YAML_FILE_DOCKER")
-container_name=$(echo "$container_name" | tr -d '"')
+# Extract the name of the container
+NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
+container_name=$("$NSO_DOCKER_NAME_GEN")
 
 # Extract the netsim folder names from the YAML file
 ned_packages=$(yq "$NEDS_PATH" "$YAML_FILE_CONFIG")

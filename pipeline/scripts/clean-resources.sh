@@ -11,11 +11,16 @@ NEDS_PATH=".netsims"
 
 echo "##### [🧹] Bringing all staging services down .... #####"
 
+# Extract the name of the container
+NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
+container_name=$("$NSO_DOCKER_NAME_GEN")
+compose_file="pipeline/setup/docker-compose-${container_name}.yml"
+
 # Stop all the services of the docker-compose file
-docker-compose -f pipeline/setup/docker-compose.yml down
+docker compose -f $compose_file down
 
 # Remove the rendered docker-compose file
-rm -rf pipeline/setup/docker-compose.yml
+rm -rf $compose_file
 
 # Remove the NEDs from the packages/ folder of this repository
 neds=$(yq "$NEDS_PATH" "$YAML_FILE")

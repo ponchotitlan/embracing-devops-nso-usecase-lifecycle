@@ -1,23 +1,16 @@
 #!/bin/bash -x
 # Title: Load pre-configurations
-# Description: This script goes through the files in the pipeline/preconfigs location of this repository, extracts the names, and performs a ncs_load operation on the container of the specified service. It is implied that the service provided has a NSO container associated, and that this container has a volume mounted on the pipeline/preconfigs location which points to /tmp/nso inside of the container.
+# Description: This script goes through the files in the pipeline/preconfigs location of this repository, extracts the names, and performs a ncs_load operation on the container of the specified service.
 # Author: @ponchotitlan
 #
 # Usage:
-#   ./load-preconfigs.sh <service_name>
+#   ./load-preconfigs.sh
 
 DIRECTORY="pipeline/preconfigs"
-YAML_FILE="pipeline/setup/docker-compose.yml"
 
-if [ -z "$1" ]; then
-    echo "Usage: $0 <service_name> ..."
-    exit 1
-fi
-
-# Extract the name of the container and remove quotes
-CONTAINER_NAME_PATH=".services.$1.container_name"
-container_name=$(yq "$CONTAINER_NAME_PATH" "$YAML_FILE")
-container_name=$(echo "$container_name" | tr -d '"')
+# Extract the name of the container
+NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
+container_name=$("$NSO_DOCKER_NAME_GEN")
 
 echo "##### [⬇️] Loading preconfiguration files in container $container_name .... #####"
 

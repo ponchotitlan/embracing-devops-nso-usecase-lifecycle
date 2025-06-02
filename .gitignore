@@ -6,6 +6,7 @@ venv/
 
 # Ignoring rendered files
 pipeline/setup/docker-compose.yml
+pipeline/setup/docker-compose-*.yml
 
 # Ignoring python cache
 pipeline/utils/__pycache__/

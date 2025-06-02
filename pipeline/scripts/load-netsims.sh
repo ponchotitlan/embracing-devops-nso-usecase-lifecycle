@@ -1,10 +1,10 @@
 #!/bin/bash -x
 # Title: Load Netsims
-# Description: This script creates all the netsim devices specified in the config.yaml file. The devices are created in the /netsim directory of the NSO container from the service specified. It is assumed that the container in the service is a NSO container. Once created, the netsim devices are subsequently onboarded on NSO, connected and synced-from. 
+# Description: This script creates all the netsim devices specified in the config.yaml file. The devices are created in the /netsim directory of the NSO container from the service specified. Once created, the netsim devices are subsequently onboarded on NSO, connected and synced-from. 
 # Author: @ponchotitlan
 #
 # Usage:
-#   ./load-netsims.sh <service-name>
+#   ./load-netsims.sh
 
 # This function issues the ncs-netsim commands in the target container for creating a netsim network with a dummy device.
 # It is neccessary to do this for adding actual netsim devices later on.
@@ -62,20 +62,13 @@ connect_sync_netsims(){
 
 
 YAML_FILE_CONFIG="pipeline/setup/config.yaml"
-YAML_FILE_DOCKER="pipeline/setup/docker-compose.yml"
 NEDS_PATH=".netsims"
-
-if [ -z "$1" ]; then
-    echo "Usage: $0 <container_name> ..."
-    exit 1
-fi
 
 echo "##### [🛸] Loading netsims .... #####"
 
-# Extract the name of the container and remove quotes
-CONTAINER_NAME_PATH=".services.$1.container_name"
-container_name=$(yq "$CONTAINER_NAME_PATH" "$YAML_FILE_DOCKER")
-container_name=$(echo "$container_name" | tr -d '"')
+# Extract the name of the container
+NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
+container_name=$("$NSO_DOCKER_NAME_GEN")
 
 # Get the NEDs from the config.yaml file
 is_first_ned=1

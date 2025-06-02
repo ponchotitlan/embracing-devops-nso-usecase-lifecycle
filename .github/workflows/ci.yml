@@ -75,6 +75,7 @@ jobs:
 
   deliver-tests:
     runs-on: self-hosted
+    if: ${{ env.RUN_TESTS == 'true' && env.DELIVER_ARTIFACTS == 'true' }}
     needs: test
     if: always()
     steps:
