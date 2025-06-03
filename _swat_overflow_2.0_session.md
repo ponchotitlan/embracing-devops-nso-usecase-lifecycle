@@ -113,9 +113,7 @@ Having an artifact of this kind helps with the following:
 - ✅ All services contained in the artifact correspond to a valid release version
 - 📦 Deployment of all-or-nothing in the customer environment
 
-```
-TBD
-```
+* 👉🏽 [A CI run with generated artifacts](https://github.com/ponchotitlan/embracing-devops-nso-usecase-lifecycle/actions/runs/15414224803)
 
 ## 🔀 Dynamic parameters on each run
 
