@@ -9,7 +9,13 @@ load-neds:
 
 load-packages:
 	@pipeline/scripts/compile-packages.sh
-	@pipeline/scripts/packages-reload.sh
+	status=$$(pipeline/scripts/packages-reload.sh); \
+	if [ "$$status" = "failed" ]; then \
+		echo "📦❌ Service Packages loading failed!"; \
+		exit 1; \
+	else \
+		echo "📦✅ Service Packages loading successful!"; \
+	fi
 
 prepare-test-network:
 	@pipeline/scripts/load-preconfigs.sh

@@ -11,11 +11,11 @@ Nevetheless, this does not intend to be a one-size-fits-all recommendations list
 In this fireside chat, we will briefly discuss the following topics:
 
 - 🤖 Job definition using bash scripting
-- 📃 ```docker-compose``` for NSO and other resources management
 - 🔖 Features definition in yaml files
+- 📃 ```docker-compose``` for NSO and other resources management
 - 🔥 Job halting with meaninful checks
-- 🔀 Enabling of dynamic parameters on each run
-- 📦 Artifact building
+- 📦 Artifact packaging
+- 🔀 Dynamic parameters on each run
 
 ## 🤖 Job definition using bash scripting
 
@@ -37,6 +37,92 @@ Definition of the entire CI pipeline with ```make``` commands that trigger small
 - If the logic becomes complex (e.g., conditionals, loops, or error handling), it can be tricky to make it work with bash syntax
 - Robust error handling might become complicated with pure bash
 
+## 🔖 Features definition in yaml files
+
+Usage of yaml files for specifying the different parameters of our staging enrionment.
+
+* 👉🏽 [Our config yaml](https://github.com/ponchotitlan/embracing-devops-nso-usecase-lifecycle/blob/main/pipeline/setup/config.yaml)
+
+Sections:
+
+- 🐋 NSO Docker container settings
+- 📦 Binary files to download (could be the NEDs to use, services from Artifactory external to our repository, etc)
+- 🤖 Netsims to spin
+
 ## 📃 ```docker-compose``` for NSO and other resources management
 
-{{ nso.container_name }} could be nso-get_current_branch()-get_build_number()
+Usage of a template for creating docker-compose based environments which are handled independently on every run.
+
+* 👉🏽 [Our docker-compose template](https://github.com/ponchotitlan/embracing-devops-nso-usecase-lifecycle/blob/main/pipeline/setup/docker-compose.j2)
+
+Service contents:
+
+- 🐋 The name of the service and the container itself follows this format: ```{{nso.container_name from yaml}}-{{git branch}}-{{git branch build no.}}```
+- 🌄 Image to use
+- 💾 Volumes to bind:
+    - Packages in this repository
+    - ```ncs.conf``` for the NSO Docker container
+    - Pre-configuration files (auth groups, netsim devices configs, etc)
+- 🌎 Environment variables for the NSO Docker container:
+    - Do packages reload on every restart
+    - Admin credentials
+- 🏥 Healthchecks to know when is the container ready (```ncs_cmd command responsive```)
+
+## 🔥 Job halting with meaninful checks
+
+The CI stages actually stop whenever something is wrong, saving time in uneccesary execution of further stages. The bash scripts return a custom status tracked by the commands of our Makefile.
+
+* 👉🏽 [Our Makefile](https://github.com/ponchotitlan/embracing-devops-nso-usecase-lifecycle/blob/main/Makefile)
+
+Ex. 
+```packages-reload.sh```
+
+```
+TOKEN_FAILED="result false"
+
+reload_output=$(docker exec -i $container_name bash -lc "echo 'packages reload' | ncs_cli -Cu admin")
+if echo "$reload_output" | grep -q "$TOKEN_FAILED"; then
+    # Packages reload failed!
+    echo "failed"
+else
+    # Packages reload passed!
+    echo "pass"
+fi
+```
+
+```Makefile```
+```
+load-packages:
+	@pipeline/scripts/compile-packages.sh
+	status=$$(pipeline/scripts/packages-reload.sh); \
+	if [ "$$status" = "failed" ]; then \
+		echo "📦❌ Service Packages loading failed!"; \
+		exit 1; \
+	else \
+		echo "📦✅ Service Packages loading successful!"; \
+	fi
+```
+
+## 📦 Artifact packaging
+
+The release stages should create a compressed file with the compiled services of my repository. The compiling is happening anyhow as part of the staging environment setup, hence all dependencies and compilation order should be sorted by then.
+
+Having an artifact of this kind helps with the following:
+
+- 🔌 All dependencies between services are already sorted out
+- ✅ All services contained in the artifact correspond to a valid release version
+- 📦 Deployment of all-or-nothing in the customer environment
+
+```
+TBD
+```
+
+## 🔀 Dynamic parameters on each run
+
+For ease of development/testing, the pipeline is flexible on running tests Y/N and creating artifacts Y/N
+
+* 👉🏽 [Our CI pipeline definition](https://github.com/ponchotitlan/embracing-devops-nso-usecase-lifecycle/blob/main/.github/workflows/ci.yml)
+
+![Manual run](doc-images/manual-run.png)
+
+----------
