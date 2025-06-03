@@ -95,31 +95,21 @@ jobs:
       - name: ⭐️ Get the latest tag
         id: get_latest_tag
         run: make get-current-release-tag
+
       - name: ⭐️ Increment version
         id: increment_version
         run: make calculate-new-release-tag VERSION=${{ env.tag }}
-      - name: ⭐️ Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.new_version }}
-          release_name: Release v.${{ env.new_version }}
-          body: |
-            🏅 Automated NSO rfs packages code release v.${{ env.new_version }} 🏅
-          draft: false
-          prerelease: false
 
-      - name: ⭐️ Upload Release Asset
-        uses: actions/upload-release-asset@v1
+      - name: ⭐️ Create Release and Upload Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ⭐️ Release v.${{ env.new_version }}
+          tag_name: ${{ env.new_version }}
+          body: |
+            🏅 Automated Services Release v.${{ env.new_version }} 🏅
+          files: pipeline/preconfigs/ciscolive_demo_packages.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: pipeline/preconfigs/ciscolive_demo_packages.tar.gz
-          asset_name: ciscolive_demo_packages.tar.gz
-          asset_content_type: application/zip
 
   cleanup:
     runs-on: self-hosted
