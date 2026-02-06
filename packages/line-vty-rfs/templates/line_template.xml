@@ -13,10 +13,10 @@
                 <output>{$OUTPUT_TRANSPORT}</output>
             </transport>
             <exec-timeout>
-                <mins>{$EXEC_TIMEOUT}</mins>
+                <minutes>{$EXEC_TIMEOUT}</minutes>
             </exec-timeout>
             <session-timeout>
-                <mins>{$SESSION_TIMEOUT}</mins>
+                <minutes>{$SESSION_TIMEOUT}</minutes>
             </session-timeout>
             </template>
         </line>
