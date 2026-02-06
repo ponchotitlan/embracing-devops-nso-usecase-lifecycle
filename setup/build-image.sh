@@ -11,7 +11,5 @@ CONFIG_FILE="config.yaml"
 nso_image=$(awk -F': ' '/^nso-image:/ {print $2}' "$CONFIG_FILE")
 
 # Docker build. The resulting image will have the name provided in the config.yaml file
-# Force linux/amd64 platform for M1 Mac compatibility (NSO native libraries are x86_64 only)
 DOCKER_BUILDKIT=1 docker build \
---platform linux/amd64 \
 -t $nso_image .

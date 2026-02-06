@@ -18,6 +18,9 @@ compose_file="docker-compose.yml"
 # Stop all the services of the docker-compose file
 docker compose -f $compose_file down
 
+# Remove NSO state volume
+docker volume rm -f ${container_name}-etc 2>/dev/null || echo "Volume already removed or doesn't exist"
+
 # Remove the NEDs from the packages/ folder of this repository
 neds=$(yq "$NEDS_PATH" "$YAML_FILE")
 for ned in $neds; do

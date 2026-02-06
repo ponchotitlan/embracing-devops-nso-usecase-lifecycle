@@ -92,6 +92,7 @@ clean:
 deep-clean: down
 	@echo "--- 🧹🔥 Deep cleaning (volumes and state) ---"
 	docker compose down -v
+	docker volume rm -f my-nso-cicd-local-dev-etc 2>/dev/null || true
 	rm -rf ncs/ssh/ ncs/ssl/ ncs/ncs.crypto_keys
 	rm -f docker-compose.yml Dockerfile
 	@echo "--- ✅ Deep clean complete. Run 'make up' to rebuild ---"

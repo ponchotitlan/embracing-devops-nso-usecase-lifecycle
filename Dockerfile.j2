@@ -1,9 +1,6 @@
 # Base image for the NSO container - From the config.yaml file
 FROM {{ nso-base }}
 
-# Force x86_64 platform for M1 Macs
-FROM --platform=linux/amd64 localhost:5000/cisco-nso-prod:6.5
-
 # Setup of a working directory
 WORKDIR /nso/run/packages
 
