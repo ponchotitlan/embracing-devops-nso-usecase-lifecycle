@@ -6,20 +6,22 @@
 # Usage:
 #   ./create-artifact-tests.sh
 
-# This function creates a tar file of the folder specified and saves it in the /tmp/nso location
-# Usage tar_folders <container_name(str)> <package_folder_names(array(str))>
+# This function runs robot tests and returns 1 for success, 0 for failure based on exit code
+# Usage run_robot_test <container_name(str)> <service_name(str)>
 run_robot_test(){
     local container_name="$1"
     local service_name="$2"
 
-    local TOKEN_SUCCESS="0 failed"
-    local output=$(docker exec -i $container_name bash -lc "cd /nso/run/packages/$service_name/tests && robot $service_name.robot")
-
-    if echo "$output" | grep -q "$TOKEN_SUCCESS"; then
-        # This test passed!
+    echo "🧪 Running tests for $service_name..." >&2
+    
+    # Run robot test and capture exit code (redirect output to stderr so it's not captured)
+    if docker exec -i $container_name bash -lc "cd /nso/run/packages/$service_name/tests && robot $service_name.robot" >&2; then
+        # Robot test passed (exit code 0)
+        echo "✅ Tests passed for $service_name" >&2
         echo 1
     else
-        # This test didn't pass!
+        # Robot test failed (non-zero exit code)
+        echo "❌ Tests failed for $service_name" >&2
         echo 0
     fi
 }
@@ -57,13 +59,19 @@ for package in "${all_packages[@]}"; do
         if [[ $this_test_pass == 0 ]]; then
             all_tests_passed=0
         fi
+        
+        # Copy output.xml from container to host for AI analysis
+        echo "📥 Copying test results for $package..."
+        docker cp "$container_name:/nso/run/packages/$package/tests/output.xml" "$PACKAGES_DIR/$package/tests/output.xml" 2>/dev/null || echo "⚠️  No output.xml found for $package"
     fi
 done
 
 if [[ $all_tests_passed == 0 ]]; then
     # The job failed
-    echo "failed"
+    echo "❌ Test suite failed - at least one test did not pass"
+    exit 1
 else
     # The job is successful
-    echo "pass"
+    echo "✅ All tests passed successfully"
+    exit 0
 fi

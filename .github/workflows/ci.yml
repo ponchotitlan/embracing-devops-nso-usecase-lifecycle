@@ -2,6 +2,7 @@ name: Cisco Live 🤖🇳🇱 NSO services delivery
 
 on:
   push:
+  pull_request:
   workflow_dispatch:
     inputs:
       run-tests:
@@ -76,9 +77,18 @@ jobs:
         make netsims
         make run-tests
 
+    - name: 📊 Comment test results on PR
+      if: always()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+      run: ./setup/post-test-comment.sh
+
   deliver-tests:
     runs-on: self-hosted
     needs: test
+    if: always()
     steps:
     - name: 📦 Generate artifacts
       run: |
@@ -170,4 +180,4 @@ jobs:
     - name: 🧹 Cleanup resources
       run: |
         make render
-        make clean
+        make deep-clean

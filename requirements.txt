@@ -1,2 +1,5 @@
 requests
 textfsm
+# AI test analysis dependencies
+anthropic>=0.18.0
+openai>=1.0.0

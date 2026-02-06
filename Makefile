@@ -69,13 +69,7 @@ down:
 run-tests:
 	@echo "--- 🤖 Running Robot Framework tests ---"
 	./setup/install-testing-libraries.sh
-	status=$$(./setup/run-robot-tests.sh); \
-	if [ "$$status" = "failed" ]; then \
-		echo "🤖❌ At least one test failed!"; \
-		exit 1; \
-	else \
-		echo "🤖✅ All tests were successful!"; \
-	fi
+	./setup/run-robot-tests.sh
 
 create-artifact-packages:
 	./setup/create-artifact-packages.sh
@@ -91,8 +85,4 @@ clean:
 # Target to deep clean (includes volumes and NSO state files)
 deep-clean: down
 	@echo "--- 🧹🔥 Deep cleaning (volumes and state) ---"
-	docker compose down -v
-	docker volume rm -f my-nso-cicd-local-dev-etc 2>/dev/null || true
-	rm -rf ncs/ssh/ ncs/ssl/ ncs/ncs.crypto_keys
-	rm -f docker-compose.yml Dockerfile
-	@echo "--- ✅ Deep clean complete. Run 'make up' to rebuild ---"
+	./setup/deep-clean.sh
