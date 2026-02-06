@@ -76,6 +76,13 @@ jobs:
         make netsims
         make run-tests
 
+    - name: 📊 Publish Robot Framework test report
+      uses: joonvena/robotframework-reporter-action@v2
+      if: always()
+      with:
+        report_path: packages
+        gh_access_token: ${{ secrets.GITHUB_TOKEN }}
+
   deliver-tests:
     runs-on: self-hosted
     needs: test
