@@ -1,4 +1,4 @@
-.PHONY: all render register build run up compile reload netsims down
+.PHONY: all render register build run up compile reload netsims down run-tests create-artifact-packages create-artifact-tests clean deep-clean
 
 # Makefile for building, creating and cleaning
 # the NSO and CXTA containers for this development environment.
@@ -58,6 +58,14 @@ netsims:
 	@echo "--- 🛸 Loading netsims ---"
 	./setup/load-netsims.sh
 
+# Target to start Docker Compose services
+up: render register build run compile reload netsims
+
+# Target to stop Docker Compose services
+down:
+	@echo "--- 🛑 Stopping Docker Compose services ---"
+	docker compose down
+
 run-tests:
 	@echo "--- 🤖 Running Robot Framework tests ---"
 	./setup/install-testing-libraries.sh
@@ -75,5 +83,15 @@ create-artifact-packages:
 create-artifact-tests:
 	./setup/create-artifact-tests.sh
 
+# Target to clean resources (stop containers, remove NEDs)
 clean:
+	@echo "--- 🧹 Cleaning resources ---"
 	./setup/clean-resources.sh
+
+# Target to deep clean (includes volumes and NSO state files)
+deep-clean: down
+	@echo "--- 🧹🔥 Deep cleaning (volumes and state) ---"
+	docker compose down -v
+	rm -rf ncs/ssh/ ncs/ssl/ ncs/ncs.crypto_keys
+	rm -f docker-compose.yml Dockerfile
+	@echo "--- ✅ Deep clean complete. Run 'make up' to rebuild ---"

@@ -2,7 +2,6 @@ services:
   {{ nso-name }}:
     container_name: {{ nso-name }}
     image: {{ nso-image }}
-    platform: linux/amd64
     volumes:
       - type: bind
         source: ./packages/
