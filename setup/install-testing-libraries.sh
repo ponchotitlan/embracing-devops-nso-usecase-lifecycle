@@ -8,9 +8,8 @@
 
 echo "##### [🏃🏻‍♀️] Installing the libraries required for testing .... #####"
 
-# Extract the name of the container
-NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
-container_name=$("$NSO_DOCKER_NAME_GEN")
+# Extract the name of the container from docker-compose.yml
+container_name=$(awk '/container_name:/ {print $2; exit}' "docker-compose.yml")
 
 docker exec -i $container_name bash -lc "cd /tmp/nso/ && pip install -r requirements.txt"
 

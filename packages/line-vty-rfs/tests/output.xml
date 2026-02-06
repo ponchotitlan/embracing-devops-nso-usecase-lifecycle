@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.1.1 (Python 3.11.9 on linux)" generated="20260206 16:03:20.387" rpa="false" schemaversion="4">
+<suite id="s1" name="Line-Vty-Rfs" source="/nso/run/packages/line-vty-rfs/tests/line-vty-rfs.robot">
+<kw name="Set my HTTP Request Header" type="SETUP">
+<doc>Set the headers for NSO REST requests</doc>
+<kw name="Set Headers" library="REST">
+<arg>{ "Authorization": "Basic YWRtaW46YWRtaW4="}</arg>
+<tag>settings</tag>
+<doc>*Sets new request headers or updates the existing.*</doc>
+<status status="PASS" starttime="20260206 16:03:20.594" endtime="20260206 16:03:20.594"/>
+</kw>
+<kw name="Set Headers" library="REST">
+<arg>{ "Accept": "application/yang-data+json"}</arg>
+<tag>settings</tag>
+<doc>*Sets new request headers or updates the existing.*</doc>
+<status status="PASS" starttime="20260206 16:03:20.594" endtime="20260206 16:03:20.595"/>
+</kw>
+<kw name="Set Headers" library="REST">
+<arg>{ "Content-type": "application/yang-data+json"}</arg>
+<tag>settings</tag>
+<doc>*Sets new request headers or updates the existing.*</doc>
+<status status="PASS" starttime="20260206 16:03:20.595" endtime="20260206 16:03:20.595"/>
+</kw>
+<status status="PASS" starttime="20260206 16:03:20.594" endtime="20260206 16:03:20.595"/>
+</kw>
+<test id="s1-t1" name="Create line-template-vty-router-rfs" line="19">
+<kw name="Get File" library="OperatingSystem">
+<var>${create_acl_payload}</var>
+<arg>input_create.json</arg>
+<doc>Returns the contents of a specified file.</doc>
+<msg timestamp="20260206 16:03:20.596" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/input_create.json"&gt;/nso/run/packages/line-vty-rfs/tests/input_create.json&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 16:03:20.596" level="INFO">${create_acl_payload} = {
+    "line-vty-rfs:line-template-vty-line-vty-rfs": [
+      {
+        "device": "ciscolive-iosxr-dummy-02",
+        "line-template": [
+          {
+            "name": "test_vty_01",
+            "ip-g...</msg>
+<status status="PASS" starttime="20260206 16:03:20.595" endtime="20260206 16:03:20.596"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${create_acl_payload}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260206 16:03:20.597" level="INFO">{
+    "line-vty-rfs:line-template-vty-line-vty-rfs": [
+      {
+        "device": "ciscolive-iosxr-dummy-02",
+        "line-template": [
+          {
+            "name": "test_vty_01",
+            "ip-group": "vty01",
+            "session-timeout": "5",
+            "exec-timeout": "10",
+            "transport-input": "ssh",
+            "transport-output": "telnet"
+          }
+        ]
+      }
+    ]
+  }</msg>
+<status status="PASS" starttime="20260206 16:03:20.596" endtime="20260206 16:03:20.597"/>
+</kw>
+<kw name="PATCH" library="REST">
+<var>${result}</var>
+<arg>${url_acl_service}</arg>
+<arg>${create_acl_payload}</arg>
+<tag>http</tag>
+<doc>*Sends a PATCH request to the endpoint.*</doc>
+<msg timestamp="20260206 16:03:21.585" level="INFO">/usr/local/lib/python3.11/site-packages/tzlocal/unix.py:207: UserWarning: Can not find any timezone configuration, defaulting to UTC.
+  warnings.warn("Can not find any timezone configuration, defaulting to UTC.")</msg>
+<msg timestamp="20260206 16:03:21.586" level="INFO">${result} = {'seconds': 0.9731749999999999, 'status': 204, 'reason': 'No Content', 'body': '', 'headers': {'Date': 'Fri, 06 Feb 2026 16:03:20 GMT', 'Last-Modified': 'Fri, 06 Feb 2026 16:03:21 GMT', 'Cache-Control...</msg>
+<status status="PASS" starttime="20260206 16:03:20.597" endtime="20260206 16:03:21.586"/>
+</kw>
+<kw name="Run" library="OperatingSystem">
+<var>${acl_cdb}</var>
+<arg>echo 'show running-config devices device ${test_device_container} config line template' | ncs_cli -Cu admin</arg>
+<doc>Runs the given command in the system and returns the output.</doc>
+<msg timestamp="20260206 16:03:21.591" level="INFO">Running command 'echo 'show running-config devices device ciscolive-iosxr-dummy-02 config line template' | ncs_cli -Cu admin 2&gt;&amp;1'.</msg>
+<msg timestamp="20260206 16:03:21.755" level="INFO">${acl_cdb} = devices device ciscolive-iosxr-dummy-02
+ config
+  line template test_vty_01
+   access-class ingress vty01
+   transport input ssh
+   transport output telnet
+   exec-timeout 10
+   session-timeout 5
+  ex...</msg>
+<status status="PASS" starttime="20260206 16:03:21.586" endtime="20260206 16:03:21.755"/>
+</kw>
+<kw name="Get File" library="OperatingSystem">
+<var>${acl_expected}</var>
+<arg>expected_create.txt</arg>
+<doc>Returns the contents of a specified file.</doc>
+<msg timestamp="20260206 16:03:21.755" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/expected_create.txt"&gt;/nso/run/packages/line-vty-rfs/tests/expected_create.txt&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 16:03:21.756" level="INFO">${acl_expected} = devices device ciscolive-iosxr-dummy-02
+ config
+  line template test_vty_01
+   access-class ingress vty01
+   transport input ssh
+   transport output telnet
+   exec-timeout 10
+   session-timeout 5
+  ex...</msg>
+<status status="PASS" starttime="20260206 16:03:21.755" endtime="20260206 16:03:21.756"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${acl_cdb}</arg>
+<arg>${acl_expected}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" starttime="20260206 16:03:21.756" endtime="20260206 16:03:21.757"/>
+</kw>
+<doc>Create a new line-template-vty-router-rfs entry</doc>
+<status status="PASS" starttime="20260206 16:03:20.595" endtime="20260206 16:03:21.757"/>
+</test>
+<test id="s1-t2" name="Change line-template-vty-router-rfs" line="28">
+<kw name="Get File" library="OperatingSystem">
+<var>${create_acl_payload}</var>
+<arg>input_change.json</arg>
+<doc>Returns the contents of a specified file.</doc>
+<msg timestamp="20260206 16:03:21.758" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/input_change.json"&gt;/nso/run/packages/line-vty-rfs/tests/input_change.json&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 16:03:21.758" level="INFO">${create_acl_payload} = {
+    "line-vty-rfs:line-template-vty-line-vty-rfs": [
+      {
+        "device": "ciscolive-iosxr-dummy-02",
+        "line-template": [
+          {
+            "name": "test_vty_01",
+            "ip-g...</msg>
+<status status="PASS" starttime="20260206 16:03:21.757" endtime="20260206 16:03:21.758"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${create_acl_payload}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260206 16:03:21.758" level="INFO">{
+    "line-vty-rfs:line-template-vty-line-vty-rfs": [
+      {
+        "device": "ciscolive-iosxr-dummy-02",
+        "line-template": [
+          {
+            "name": "test_vty_01",
+            "ip-group": "vty01",
+            "session-timeout": "5",
+            "exec-timeout": "20",
+            "transport-input": "ssh",
+            "transport-output": "ssh"
+          }
+        ]
+      }
+    ]
+  }</msg>
+<status status="PASS" starttime="20260206 16:03:21.758" endtime="20260206 16:03:21.758"/>
+</kw>
+<kw name="PATCH" library="REST">
+<var>${result}</var>
+<arg>${url_acl_service}</arg>
+<arg>${create_acl_payload}</arg>
+<tag>http</tag>
+<doc>*Sends a PATCH request to the endpoint.*</doc>
+<msg timestamp="20260206 16:03:22.221" level="INFO">${result} = {'seconds': 0.459865, 'status': 204, 'reason': 'No Content', 'body': '', 'headers': {'Date': 'Fri, 06 Feb 2026 16:03:21 GMT', 'Last-Modified': 'Fri, 06 Feb 2026 16:03:22 GMT', 'Cache-Control': 'privat...</msg>
+<status status="PASS" starttime="20260206 16:03:21.758" endtime="20260206 16:03:22.221"/>
+</kw>
+<kw name="Run" library="OperatingSystem">
+<var>${acl_cdb}</var>
+<arg>echo 'show running-config devices device ${test_device_container} config line template' | ncs_cli -Cu admin</arg>
+<doc>Runs the given command in the system and returns the output.</doc>
+<msg timestamp="20260206 16:03:22.224" level="INFO">Running command 'echo 'show running-config devices device ciscolive-iosxr-dummy-02 config line template' | ncs_cli -Cu admin 2&gt;&amp;1'.</msg>
+<msg timestamp="20260206 16:03:22.397" level="INFO">${acl_cdb} = devices device ciscolive-iosxr-dummy-02
+ config
+  line template test_vty_01
+   access-class ingress vty01
+   transport input ssh
+   transport output ssh
+   exec-timeout 20
+   session-timeout 5
+  exit
+...</msg>
+<status status="PASS" starttime="20260206 16:03:22.221" endtime="20260206 16:03:22.398"/>
+</kw>
+<kw name="Get File" library="OperatingSystem">
+<var>${acl_expected}</var>
+<arg>expected_change.txt</arg>
+<doc>Returns the contents of a specified file.</doc>
+<msg timestamp="20260206 16:03:22.398" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/expected_change.txt"&gt;/nso/run/packages/line-vty-rfs/tests/expected_change.txt&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 16:03:22.399" level="INFO">${acl_expected} = devices device ciscolive-iosxr-dummy-02
+ config
+  line template test_vty_01
+   access-class ingress vty01
+   transport input ssh
+   transport output ssh
+   exec-timeout 20
+   session-timeout 5
+  exit
+...</msg>
+<status status="PASS" starttime="20260206 16:03:22.398" endtime="20260206 16:03:22.399"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${acl_cdb}</arg>
+<arg>${acl_expected}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" starttime="20260206 16:03:22.399" endtime="20260206 16:03:22.399"/>
+</kw>
+<doc>Change an existing line-template-vty-router-rfs entry</doc>
+<status status="PASS" starttime="20260206 16:03:21.757" endtime="20260206 16:03:22.400"/>
+</test>
+<doc>This is a very simple Robot test case intended to showcase NSO rfs CRUD interactions
+Target package: router-rfs
+Target service: line-template-vty-router-rfs</doc>
+<status status="PASS" starttime="20260206 16:03:20.389" endtime="20260206 16:03:22.401"/>
+</suite>
+<statistics>
+<total>
+<stat pass="2" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="2" fail="0" skip="0" id="s1" name="Line-Vty-Rfs">Line-Vty-Rfs</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

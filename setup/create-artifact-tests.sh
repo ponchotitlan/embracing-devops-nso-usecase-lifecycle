@@ -4,33 +4,27 @@
 # Author: @ponchotitlan
 #
 # Usage:
-#   ./create-artifact-tests.sh
+#   ./create-artifact-tests.sh <service-name>
 
 # This function creates a tar file of the folder specified and saves it in the /tmp/nso location
 # Usage tar_folders <container_name(str)> <package_folder_names(array(str))>
-run_robot_test(){
+tar_folders(){
     local container_name="$1"
-    local service_name="$2"
+    local tests_array="$@"
+    local ARTIFACT_NAME="ciscolive_demo_test.tar.gz"
+    local ARTIFACT_DIR="/tmp/nso"
 
-    local TOKEN_SUCCESS="0 failed"
-    local output=$(docker exec -i $container_name bash -lc "cd /nso/run/packages/$service_name/tests && robot $service_name.robot")
-
-    if echo "$output" | grep -q "$TOKEN_SUCCESS"; then
-        # This test passed!
-        echo 1
-    else
-        # This test didn't pass!
-        echo 0
-    fi
+    docker exec -i $container_name bash -lc "cd /nso/run/packages/ && tar -czvf $ARTIFACT_DIR/$ARTIFACT_NAME ${tests_array[@]}"
 }
 
-YAML_FILE_CONFIG="pipeline/setup/config.yaml"
+YAML_FILE_CONFIG="config.yaml"
 PACKAGES_DIR="packages"
 NEDS_PATH=".netsims | keys"
 
-# Extract the name of the container
-NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
-container_name=$("$NSO_DOCKER_NAME_GEN")
+echo "##### [📦] Zipping the test results into an artifact.... #####"
+
+# Extract the name of the container from docker-compose.yml
+container_name=$(awk '/container_name:/ {print $2; exit}' "docker-compose.yml")
 
 # Extract the netsim folder names from the YAML file
 ned_packages=$(yq "$NEDS_PATH" "$YAML_FILE_CONFIG")
@@ -38,8 +32,8 @@ ned_packages=$(yq "$NEDS_PATH" "$YAML_FILE_CONFIG")
 # Get all the packages folders and remove the trailing slash from their names
 all_packages=($(ls -d "$PACKAGES_DIR"/*/ | xargs -n 1 basename))
 
+service_tests=()
 # Iterate over each folder and check if it's in the excluded list
-all_tests_passed=1
 for package in "${all_packages[@]}"; do
 
     is_ned=0
@@ -52,19 +46,10 @@ for package in "${all_packages[@]}"; do
     done
 
     if [[ $is_ned == 0 ]]; then
-        this_test_pass=$(run_robot_test $container_name $package)
-
-        # If at least one test didn't pass. This job is declared a failure
-        if [[ $this_test_pass == 0 ]]; then
-            all_tests_passed=0
-        fi
+        service_tests+=("${package}/tests")
     fi
 done
 
-if [[ $all_tests_passed == 0 ]]; then
-    # The job failed
-    echo "failed"
-else
-    # The job is successful
-    echo "pass"
-fi
+tar_folders $container_name ${service_tests[@]}
+
+echo "[📦] Creation of the artifact ciscolive_demo_test.tar.gz done!"

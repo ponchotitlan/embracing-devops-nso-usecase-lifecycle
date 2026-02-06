@@ -17,15 +17,14 @@ tar_folders(){
     docker exec -i $container_name bash -lc "cd /nso/run/packages/ && tar -czvf $ARTIFACT_DIR/$ARTIFACT_NAME ${packages_array[@]}"
 }
 
-YAML_FILE_CONFIG="pipeline/setup/config.yaml"
+YAML_FILE_CONFIG="config.yaml"
 PACKAGES_DIR="packages"
 NEDS_PATH=".netsims | keys"
 
 echo "##### [📦] Zipping the compiled packages into an artifact.... #####"
 
-# Extract the name of the container
-NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
-container_name=$("$NSO_DOCKER_NAME_GEN")
+# Extract the name of the container from docker-compose.yml
+container_name=$(awk '/container_name:/ {print $2; exit}' "docker-compose.yml")
 
 # Extract the netsim folder names from the YAML file
 ned_packages=$(yq "$NEDS_PATH" "$YAML_FILE_CONFIG")
