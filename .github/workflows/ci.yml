@@ -164,5 +164,10 @@ jobs:
     if: always()
     needs: [build,deliver-packages,test,deliver-tests]
     steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+
     - name: 🧹 Cleanup resources
-      run: make clean
+      run: |
+        make render
+        make clean
