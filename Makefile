@@ -69,13 +69,7 @@ down:
 run-tests:
 	@echo "--- 🤖 Running Robot Framework tests ---"
 	./setup/install-testing-libraries.sh
-	status=$$(./setup/run-robot-tests.sh); \
-	if [ "$$status" = "failed" ]; then \
-		echo "🤖❌ At least one test failed!"; \
-		exit 1; \
-	else \
-		echo "🤖✅ All tests were successful!"; \
-	fi
+	./setup/run-robot-tests.sh
 
 ai-analyze-tests:
 	@echo "--- 🧠 Analyzing test results with AI ---"
