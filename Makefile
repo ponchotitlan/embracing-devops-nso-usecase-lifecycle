@@ -75,10 +75,5 @@ create-artifact-packages:
 create-artifact-tests:
 	./setup/create-artifact-tests.sh
 
-# Target to start Docker Compose services
-up: render register build run compile reload netsims
-
-# Target to stop Docker Compose services
-down:
-	@echo "--- 🛑 Stopping Docker Compose services ---"
-	docker compose down
+clean:
+	./setup/clean-resources.sh
