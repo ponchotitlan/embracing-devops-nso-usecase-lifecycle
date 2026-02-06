@@ -31,6 +31,7 @@ Change access-list-acl-rfs
     Log    ${create_acl_payload}
     ${result}    PATCH    ${url_acl_service}    ${create_acl_payload}
     Log    ${result}
+    ${acl_cdb}    Run    echo "show running-config devices device ${test_device_container} config ipv4 access-list" | ncs_cli -Cu admin
     ${acl_expected}    Get File    expected_change.txt
     Should Be Equal As Strings    ${acl_cdb}    ${acl_expected}  
 
