@@ -12,16 +12,16 @@ run_robot_test(){
     local container_name="$1"
     local service_name="$2"
 
-    echo "🧪 Running tests for $service_name..."
+    echo "🧪 Running tests for $service_name..." >&2
     
-    # Run robot test and capture exit code
-    if docker exec -i $container_name bash -lc "cd /nso/run/packages/$service_name/tests && robot $service_name.robot"; then
+    # Run robot test and capture exit code (redirect output to stderr so it's not captured)
+    if docker exec -i $container_name bash -lc "cd /nso/run/packages/$service_name/tests && robot $service_name.robot" >&2; then
         # Robot test passed (exit code 0)
-        echo "✅ Tests passed for $service_name"
+        echo "✅ Tests passed for $service_name" >&2
         echo 1
     else
         # Robot test failed (non-zero exit code)
-        echo "❌ Tests failed for $service_name"
+        echo "❌ Tests failed for $service_name" >&2
         echo 0
     fi
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 6.1.1 (Python 3.11.9 on linux)" generated="20260206 19:08:13.025" rpa="false" schemaversion="4">
+<robot generator="Robot 6.1.1 (Python 3.11.11 on linux)" generated="20260206 21:41:17.233" rpa="false" schemaversion="4">
 <suite id="s1" name="Line-Vty-Rfs" source="/nso/run/packages/line-vty-rfs/tests/line-vty-rfs.robot">
 <kw name="Set my HTTP Request Header" type="SETUP">
 <doc>Set the headers for NSO REST requests</doc>
@@ -7,29 +7,29 @@
 <arg>{ "Authorization": "Basic YWRtaW46YWRtaW4="}</arg>
 <tag>settings</tag>
 <doc>*Sets new request headers or updates the existing.*</doc>
-<status status="PASS" starttime="20260206 19:08:13.244" endtime="20260206 19:08:13.245"/>
+<status status="PASS" starttime="20260206 21:41:17.357" endtime="20260206 21:41:17.357"/>
 </kw>
 <kw name="Set Headers" library="REST">
 <arg>{ "Accept": "application/yang-data+json"}</arg>
 <tag>settings</tag>
 <doc>*Sets new request headers or updates the existing.*</doc>
-<status status="PASS" starttime="20260206 19:08:13.245" endtime="20260206 19:08:13.245"/>
+<status status="PASS" starttime="20260206 21:41:17.357" endtime="20260206 21:41:17.357"/>
 </kw>
 <kw name="Set Headers" library="REST">
 <arg>{ "Content-type": "application/yang-data+json"}</arg>
 <tag>settings</tag>
 <doc>*Sets new request headers or updates the existing.*</doc>
-<status status="PASS" starttime="20260206 19:08:13.245" endtime="20260206 19:08:13.246"/>
+<status status="PASS" starttime="20260206 21:41:17.357" endtime="20260206 21:41:17.357"/>
 </kw>
-<status status="PASS" starttime="20260206 19:08:13.244" endtime="20260206 19:08:13.246"/>
+<status status="PASS" starttime="20260206 21:41:17.357" endtime="20260206 21:41:17.358"/>
 </kw>
 <test id="s1-t1" name="Create line-template-vty-router-rfs" line="19">
 <kw name="Get File" library="OperatingSystem">
 <var>${create_acl_payload}</var>
 <arg>input_create.json</arg>
 <doc>Returns the contents of a specified file.</doc>
-<msg timestamp="20260206 19:08:13.247" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/input_create.json"&gt;/nso/run/packages/line-vty-rfs/tests/input_create.json&lt;/a&gt;'.</msg>
-<msg timestamp="20260206 19:08:13.247" level="INFO">${create_acl_payload} = {
+<msg timestamp="20260206 21:41:17.358" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/input_create.json"&gt;/nso/run/packages/line-vty-rfs/tests/input_create.json&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 21:41:17.360" level="INFO">${create_acl_payload} = {
     "line-vty-rfs:line-template-vty-line-vty-rfs": [
       {
         "device": "ciscolive-iosxr-dummy-02",
@@ -37,12 +37,12 @@
           {
             "name": "test_vty_01",
             "ip-g...</msg>
-<status status="PASS" starttime="20260206 19:08:13.246" endtime="20260206 19:08:13.247"/>
+<status status="PASS" starttime="20260206 21:41:17.358" endtime="20260206 21:41:17.360"/>
 </kw>
 <kw name="Log" library="BuiltIn">
 <arg>${create_acl_payload}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20260206 19:08:13.248" level="INFO">{
+<msg timestamp="20260206 21:41:17.360" level="INFO">{
     "line-vty-rfs:line-template-vty-line-vty-rfs": [
       {
         "device": "ciscolive-iosxr-dummy-02",
@@ -59,7 +59,7 @@
       }
     ]
   }</msg>
-<status status="PASS" starttime="20260206 19:08:13.247" endtime="20260206 19:08:13.248"/>
+<status status="PASS" starttime="20260206 21:41:17.360" endtime="20260206 21:41:17.360"/>
 </kw>
 <kw name="PATCH" library="REST">
 <var>${result}</var>
@@ -67,17 +67,23 @@
 <arg>${create_acl_payload}</arg>
 <tag>http</tag>
 <doc>*Sends a PATCH request to the endpoint.*</doc>
-<msg timestamp="20260206 19:08:14.482" level="INFO">/usr/local/lib/python3.11/site-packages/tzlocal/unix.py:207: UserWarning: Can not find any timezone configuration, defaulting to UTC.
+<msg timestamp="20260206 21:41:18.104" level="INFO">/usr/local/lib/python3.11/site-packages/tzlocal/unix.py:207: UserWarning: Can not find any timezone configuration, defaulting to UTC.
   warnings.warn("Can not find any timezone configuration, defaulting to UTC.")</msg>
-<msg timestamp="20260206 19:08:14.483" level="INFO">${result} = {'seconds': 0.21882, 'status': 204, 'reason': 'No Content', 'body': '', 'headers': {'Date': 'Fri, 06 Feb 2026 19:08:13 GMT', 'Last-Modified': 'Fri, 06 Feb 2026 19:08:14 GMT', 'Cache-Control': 'private...</msg>
-<status status="PASS" starttime="20260206 19:08:13.248" endtime="20260206 19:08:14.483"/>
+<msg timestamp="20260206 21:41:18.104" level="INFO">${result} = {'seconds': 0.7373569999999999, 'status': 204, 'reason': 'No Content', 'body': '', 'headers': {'Date': 'Fri, 06 Feb 2026 21:41:17 GMT', 'Last-Modified': 'Fri, 06 Feb 2026 21:41:18 GMT', 'Cache-Control...</msg>
+<status status="PASS" starttime="20260206 21:41:17.360" endtime="20260206 21:41:18.105"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${result}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260206 21:41:18.105" level="INFO">{'seconds': 0.7373569999999999, 'status': 204, 'reason': 'No Content', 'body': '', 'headers': {'Date': 'Fri, 06 Feb 2026 21:41:17 GMT', 'Last-Modified': 'Fri, 06 Feb 2026 21:41:18 GMT', 'Cache-Control': 'private, no-cache, must-revalidate, proxy-revalidate', 'Etag': 'W/"1770-414077-396932+json"', 'Content-Type': 'text/html; charset=UTF-8', 'traceparent': '00-59d7fc51ea1aeded1da0f036929258f3-a5844bed923bffdd-01', 'Pragma': 'no-cache', 'Content-Security-Policy': "default-src 'self'; style-src 'self' 'nonce-NSO_STYLE_NONCE'; block-all-mixed-content; base-uri 'self'; frame-ancestors 'none';", 'Cross-Origin-Embedder-Policy': 'require-corp', 'Cross-Origin-Opener-Policy': 'same-origin', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'X-XSS-Protection': '1; mode=block'}}</msg>
+<status status="PASS" starttime="20260206 21:41:18.105" endtime="20260206 21:41:18.105"/>
 </kw>
 <kw name="Run" library="OperatingSystem">
 <var>${acl_cdb}</var>
 <arg>echo 'show running-config devices device ${test_device_container} config line template' | ncs_cli -Cu admin</arg>
 <doc>Runs the given command in the system and returns the output.</doc>
-<msg timestamp="20260206 19:08:14.486" level="INFO">Running command 'echo 'show running-config devices device ciscolive-iosxr-dummy-02 config line template' | ncs_cli -Cu admin 2&gt;&amp;1'.</msg>
-<msg timestamp="20260206 19:08:14.648" level="INFO">${acl_cdb} = devices device ciscolive-iosxr-dummy-02
+<msg timestamp="20260206 21:41:18.105" level="INFO">Running command 'echo 'show running-config devices device ciscolive-iosxr-dummy-02 config line template' | ncs_cli -Cu admin 2&gt;&amp;1'.</msg>
+<msg timestamp="20260206 21:41:18.183" level="INFO">${acl_cdb} = devices device ciscolive-iosxr-dummy-02
  config
   line template test_vty_01
    access-class ingress vty01
@@ -86,14 +92,14 @@
    exec-timeout 10
    session-timeout 5
   ex...</msg>
-<status status="PASS" starttime="20260206 19:08:14.483" endtime="20260206 19:08:14.648"/>
+<status status="PASS" starttime="20260206 21:41:18.105" endtime="20260206 21:41:18.183"/>
 </kw>
 <kw name="Get File" library="OperatingSystem">
 <var>${acl_expected}</var>
 <arg>expected_create.txt</arg>
 <doc>Returns the contents of a specified file.</doc>
-<msg timestamp="20260206 19:08:14.649" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/expected_create.txt"&gt;/nso/run/packages/line-vty-rfs/tests/expected_create.txt&lt;/a&gt;'.</msg>
-<msg timestamp="20260206 19:08:14.649" level="INFO">${acl_expected} = devices device ciscolive-iosxr-dummy-02
+<msg timestamp="20260206 21:41:18.183" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/expected_create.txt"&gt;/nso/run/packages/line-vty-rfs/tests/expected_create.txt&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 21:41:18.184" level="INFO">${acl_expected} = devices device ciscolive-iosxr-dummy-02
  config
   line template test_vty_01
    access-class ingress vty01
@@ -102,24 +108,24 @@
    exec-timeout 10
    session-timeout 5
   ex...</msg>
-<status status="PASS" starttime="20260206 19:08:14.648" endtime="20260206 19:08:14.649"/>
+<status status="PASS" starttime="20260206 21:41:18.183" endtime="20260206 21:41:18.184"/>
 </kw>
 <kw name="Should Be Equal As Strings" library="BuiltIn">
 <arg>${acl_cdb}</arg>
 <arg>${acl_expected}</arg>
 <doc>Fails if objects are unequal after converting them to strings.</doc>
-<status status="PASS" starttime="20260206 19:08:14.649" endtime="20260206 19:08:14.650"/>
+<status status="PASS" starttime="20260206 21:41:18.184" endtime="20260206 21:41:18.184"/>
 </kw>
 <doc>Create a new line-template-vty-router-rfs entry</doc>
-<status status="PASS" starttime="20260206 19:08:13.246" endtime="20260206 19:08:14.650"/>
+<status status="PASS" starttime="20260206 21:41:17.358" endtime="20260206 21:41:18.184"/>
 </test>
-<test id="s1-t2" name="Change line-template-vty-router-rfs" line="28">
+<test id="s1-t2" name="Change line-template-vty-router-rfs" line="29">
 <kw name="Get File" library="OperatingSystem">
 <var>${create_acl_payload}</var>
 <arg>input_change.json</arg>
 <doc>Returns the contents of a specified file.</doc>
-<msg timestamp="20260206 19:08:14.651" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/input_change.json"&gt;/nso/run/packages/line-vty-rfs/tests/input_change.json&lt;/a&gt;'.</msg>
-<msg timestamp="20260206 19:08:14.651" level="INFO">${create_acl_payload} = {
+<msg timestamp="20260206 21:41:18.184" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/input_change.json"&gt;/nso/run/packages/line-vty-rfs/tests/input_change.json&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 21:41:18.185" level="INFO">${create_acl_payload} = {
     "line-vty-rfs:line-template-vty-line-vty-rfs": [
       {
         "device": "ciscolive-iosxr-dummy-02",
@@ -127,12 +133,12 @@
           {
             "name": "test_vty_01",
             "ip-g...</msg>
-<status status="PASS" starttime="20260206 19:08:14.651" endtime="20260206 19:08:14.651"/>
+<status status="PASS" starttime="20260206 21:41:18.184" endtime="20260206 21:41:18.185"/>
 </kw>
 <kw name="Log" library="BuiltIn">
 <arg>${create_acl_payload}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20260206 19:08:14.651" level="INFO">{
+<msg timestamp="20260206 21:41:18.185" level="INFO">{
     "line-vty-rfs:line-template-vty-line-vty-rfs": [
       {
         "device": "ciscolive-iosxr-dummy-02",
@@ -149,7 +155,7 @@
       }
     ]
   }</msg>
-<status status="PASS" starttime="20260206 19:08:14.651" endtime="20260206 19:08:14.651"/>
+<status status="PASS" starttime="20260206 21:41:18.185" endtime="20260206 21:41:18.185"/>
 </kw>
 <kw name="PATCH" library="REST">
 <var>${result}</var>
@@ -157,15 +163,21 @@
 <arg>${create_acl_payload}</arg>
 <tag>http</tag>
 <doc>*Sends a PATCH request to the endpoint.*</doc>
-<msg timestamp="20260206 19:08:15.109" level="INFO">${result} = {'seconds': 0.45507400000000003, 'status': 204, 'reason': 'No Content', 'body': '', 'headers': {'Date': 'Fri, 06 Feb 2026 19:08:14 GMT', 'Last-Modified': 'Fri, 06 Feb 2026 19:08:15 GMT', 'Cache-Contro...</msg>
-<status status="PASS" starttime="20260206 19:08:14.651" endtime="20260206 19:08:15.109"/>
+<msg timestamp="20260206 21:41:18.523" level="INFO">${result} = {'seconds': 0.335924, 'status': 204, 'reason': 'No Content', 'body': '', 'headers': {'Date': 'Fri, 06 Feb 2026 21:41:18 GMT', 'Last-Modified': 'Fri, 06 Feb 2026 21:41:18 GMT', 'Cache-Control': 'privat...</msg>
+<status status="PASS" starttime="20260206 21:41:18.185" endtime="20260206 21:41:18.523"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${result}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260206 21:41:18.523" level="INFO">{'seconds': 0.335924, 'status': 204, 'reason': 'No Content', 'body': '', 'headers': {'Date': 'Fri, 06 Feb 2026 21:41:18 GMT', 'Last-Modified': 'Fri, 06 Feb 2026 21:41:18 GMT', 'Cache-Control': 'private, no-cache, must-revalidate, proxy-revalidate', 'Etag': 'W/"1770-414078-210586+json"', 'Content-Type': 'text/html; charset=UTF-8', 'traceparent': '00-efbcae7d5020bccd9b6f92776d5443a4-50a68c593abf7278-01', 'Pragma': 'no-cache', 'Content-Security-Policy': "default-src 'self'; style-src 'self' 'nonce-NSO_STYLE_NONCE'; block-all-mixed-content; base-uri 'self'; frame-ancestors 'none';", 'Cross-Origin-Embedder-Policy': 'require-corp', 'Cross-Origin-Opener-Policy': 'same-origin', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'X-XSS-Protection': '1; mode=block'}}</msg>
+<status status="PASS" starttime="20260206 21:41:18.523" endtime="20260206 21:41:18.523"/>
 </kw>
 <kw name="Run" library="OperatingSystem">
 <var>${acl_cdb}</var>
 <arg>echo 'show running-config devices device ${test_device_container} config line template' | ncs_cli -Cu admin</arg>
 <doc>Runs the given command in the system and returns the output.</doc>
-<msg timestamp="20260206 19:08:15.111" level="INFO">Running command 'echo 'show running-config devices device ciscolive-iosxr-dummy-02 config line template' | ncs_cli -Cu admin 2&gt;&amp;1'.</msg>
-<msg timestamp="20260206 19:08:15.276" level="INFO">${acl_cdb} = devices device ciscolive-iosxr-dummy-02
+<msg timestamp="20260206 21:41:18.523" level="INFO">Running command 'echo 'show running-config devices device ciscolive-iosxr-dummy-02 config line template' | ncs_cli -Cu admin 2&gt;&amp;1'.</msg>
+<msg timestamp="20260206 21:41:18.604" level="INFO">${acl_cdb} = devices device ciscolive-iosxr-dummy-02
  config
   line template test_vty_01
    access-class ingress vty01
@@ -175,14 +187,14 @@
    session-timeout 5
   exit
 ...</msg>
-<status status="PASS" starttime="20260206 19:08:15.109" endtime="20260206 19:08:15.277"/>
+<status status="PASS" starttime="20260206 21:41:18.523" endtime="20260206 21:41:18.604"/>
 </kw>
 <kw name="Get File" library="OperatingSystem">
 <var>${acl_expected}</var>
 <arg>expected_change.txt</arg>
 <doc>Returns the contents of a specified file.</doc>
-<msg timestamp="20260206 19:08:15.277" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/expected_change.txt"&gt;/nso/run/packages/line-vty-rfs/tests/expected_change.txt&lt;/a&gt;'.</msg>
-<msg timestamp="20260206 19:08:15.278" level="INFO">${acl_expected} = devices device ciscolive-iosxr-dummy-02
+<msg timestamp="20260206 21:41:18.604" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/line-vty-rfs/tests/expected_change.txt"&gt;/nso/run/packages/line-vty-rfs/tests/expected_change.txt&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 21:41:18.605" level="INFO">${acl_expected} = devices device ciscolive-iosxr-dummy-02
  config
   line template test_vty_01
    access-class ingress vty01
@@ -192,21 +204,21 @@
    session-timeout 5
   exit
 ...</msg>
-<status status="PASS" starttime="20260206 19:08:15.277" endtime="20260206 19:08:15.278"/>
+<status status="PASS" starttime="20260206 21:41:18.604" endtime="20260206 21:41:18.605"/>
 </kw>
 <kw name="Should Be Equal As Strings" library="BuiltIn">
 <arg>${acl_cdb}</arg>
 <arg>${acl_expected}</arg>
 <doc>Fails if objects are unequal after converting them to strings.</doc>
-<status status="PASS" starttime="20260206 19:08:15.278" endtime="20260206 19:08:15.279"/>
+<status status="PASS" starttime="20260206 21:41:18.605" endtime="20260206 21:41:18.605"/>
 </kw>
 <doc>Change an existing line-template-vty-router-rfs entry</doc>
-<status status="PASS" starttime="20260206 19:08:14.650" endtime="20260206 19:08:15.279"/>
+<status status="PASS" starttime="20260206 21:41:18.184" endtime="20260206 21:41:18.605"/>
 </test>
 <doc>This is a very simple Robot test case intended to showcase NSO rfs CRUD interactions
 Target package: router-rfs
 Target service: line-template-vty-router-rfs</doc>
-<status status="PASS" starttime="20260206 19:08:13.026" endtime="20260206 19:08:15.280"/>
+<status status="PASS" starttime="20260206 21:41:17.234" endtime="20260206 21:41:18.606"/>
 </suite>
 <statistics>
 <total>
