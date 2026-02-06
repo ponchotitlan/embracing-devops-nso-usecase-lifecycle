@@ -1,0 +1,27 @@
+# Base image for the NSO container - From the config.yaml file
+FROM {{ nso-base }}
+
+# Setup of a working directory
+WORKDIR /nso/run/packages
+
+# Copying of the resources for initial setup
+COPY config.yaml /tmp/config.yaml
+COPY requirements.txt /tmp/requirements.txt
+COPY setup/download-artifacts.sh /tmp/download-artifacts.sh
+
+# Ensure we are running as root for operations that require elevated privileges
+USER root
+
+# pip install of the libraries in the requirements.txt fi;e
+RUN pip install -r /tmp/requirements.txt
+
+# Downloading of the artifacts mentioned in the yaml file with the credentials provided
+# Mount the secret into this specific RUN command's context.
+# The secret will then be available at /run/secrets/artifact_server_token
+RUN chmod +x /tmp/download-artifacts.sh
+RUN --mount=type=secret,id=artifact_server_token sh -x /tmp/download-artifacts.sh
+
+# Cleanup
+RUN rm -rf /tmp/download-artifacts.sh
+RUN rm -rf /tmp/config.yaml
+RUN rm -rf /tmp/requirements.txt

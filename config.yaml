@@ -1,0 +1,29 @@
+# ***************** NSO & CXTA container configurations ***************** #
+nso-base: cisco-nso-prod:6.5
+nso-image: cicd-nso-custom
+nso-name: my-nso-cicd
+
+# ***************** URLs for downloading our NEDs ***************** #
+# Preferably from an Artifact Server - In this case we are using a public GitHub repository with free trial NEDs as releases #
+downloads:
+  - https://github.com/ponchotitlan/dummy_artefact_repository/releases/download/iosxr6.5/ncs-6.5-cisco-iosxr-7.69.tar.gz
+  - https://github.com/ponchotitlan/dummy_artefact_repository/releases/download/ios6.5/ncs-6.5-cisco-ios-6.109.4.tar.gz
+  - https://github.com/ponchotitlan/dummy_artefact_repository/releases/download/asa6.5/ncs-6.5-cisco-asa-6.18.23.tar.gz
+
+# ***************** Skip compilation ***************** #
+# These are the services/artifacts that we don't want to compile in this pipeline, either because they are already compiled and available in the NSO image, or because we want to save time in the pipeline by not compiling them. The names must match the names of the folders after extracting from the tar files downloaded #
+skip-compilation:
+  - cisco-iosxr-cli-7.69
+  - cisco-ios-cli-6.109
+  - cisco-asa-cli-6.18
+
+# ***************** Netsims to be used in the tests of this pipeline ***************** #
+# The NED names must match the folders after extracting from the tar files downloaded #
+netsims:
+  cisco-iosxr-cli-7.69:
+    - ciscolive-iosxr-dummy-01
+    - ciscolive-iosxr-dummy-02
+  cisco-ios-cli-6.109:
+    - ciscolive-ios-dummy-01
+  cisco-asa-cli-6.18:
+    - ciscolive-asa-dummy-01

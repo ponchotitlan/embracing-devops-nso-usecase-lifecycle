@@ -1,10 +1,14 @@
 #!/bin/bash -x
 # Title: Load Netsims
-# Description: This script creates all the netsim devices specified in the config.yaml file. The devices are created in the /netsim directory of the NSO container from the service specified. Once created, the netsim devices are subsequently onboarded on NSO, connected and synced-from. 
-# Author: @ponchotitlan
+# Description: This script creates all the netsim devices specified in the config.yaml file. 
+#              The devices are created in the /netsim directory of the NSO container from
+#              the service specified. Once created, the netsim devices are subsequently onboarded
+#              on NSO, connected and synced-from. 
 #
 # Usage:
 #   ./load-netsims.sh
+
+local_flag=$1
 
 # This function issues the ncs-netsim commands in the target container for creating a netsim network with a dummy device.
 # It is neccessary to do this for adding actual netsim devices later on.
@@ -15,8 +19,8 @@ create_netsim_network(){
     local ned="$2"
 
     echo "[🛸] Creating the netsim network ..."
-    docker exec -i $container_name bash -lc "mkdir /netsim"
-    docker exec -i $container_name bash -lc "ncs-netsim --dir /netsim create-network /nso/run/packages/$ned 1 dummy"
+    docker exec $container_name bash -lc "mkdir /netsim"
+    docker exec $container_name bash -lc "ncs-netsim --dir /netsim create-network /opt/ncs/packages/$ned 1 dummy"
 }
 
 # This function issues the ncs-netsim commands in the target container for creating the specified netsim devices
@@ -27,7 +31,7 @@ add_netsim(){
     local container_name="$3"
 
     echo "[🛸] Creating netsim device ($netsim) with NED ($ned) ..."
-    docker exec -i $container_name bash -lc "cd /netsim && ncs-netsim add-device /nso/run/packages/$ned/ $netsim"
+    docker exec $container_name bash -lc "cd /netsim && ncs-netsim add-device /opt/ncs/packages/$ned/ $netsim"
 }
 
 # This function starts all the netsims available in the /netsim location
@@ -60,46 +64,40 @@ connect_sync_netsims(){
     docker exec -i $container_name bash -lc "echo 'devices sync-from' | ncs_cli -Cu admin"
 }
 
+CONFIG_FILE="config.yaml"
 
-YAML_FILE_CONFIG="pipeline/setup/config.yaml"
-NEDS_PATH=".netsims"
+# Get the name of the NSO container from the config.yaml file
+nso_container_name=$(awk '/container_name:/ {print $2; exit}' "docker-compose.yml")
 
-echo "##### [🛸] Loading netsims .... #####"
-
-# Extract the name of the container
-NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
-container_name=$("$NSO_DOCKER_NAME_GEN")
-
-# Get the NEDs from the config.yaml file
+# Extract neds and netsims from the config file
+topology=$(sed -n '/^netsims:/,/^[^[:space:]]/p' "$CONFIG_FILE" | tail -n +2)
+current_ned=""
 is_first_ned=1
-neds=$(yq "$NEDS_PATH" "$YAML_FILE_CONFIG")
-for ned in $neds; do
-    # The NEDs are the keys of the netsims structure in the config.yaml file
-    if echo "$ned" | grep -q '\:'; then
-        ned=$(echo "$ned" | tr -d '"')
-        ned=$(echo "$ned" | tr -d ':')
 
-        # Creation of the netsim network in the /netsim location of the container if this is the first NED
-        if [ "$is_first_ned" -eq 1 ]; then
-            create_netsim_network $container_name $ned
-            is_first_ned=0
-        fi
-        
-        # Get the netsims of this NED
-        netsims_path=".netsims.\"$ned\""
-        netsims=$(yq "$netsims_path" "$YAML_FILE_CONFIG")
-        for netsim in $netsims; do
-            if [[ "$netsim" != *[\[\]]* ]]; then
-                netsim=$(echo "$netsim" | tr -d '"')
-                netsim=$(echo "$netsim" | tr -d ',')
-                add_netsim $ned $netsim $container_name
-            fi
-        done
+# Loop through the extracted topology
+while IFS= read -r line; do
+    # Match a NED
+    if [[ "$line" =~ ^[[:space:]]+([a-zA-Z0-9._/-]+):$ ]]; then
+        current_ned="${BASH_REMATCH[1]}"
+        echo "[📦] NED: $current_ned"
     fi
-done
 
-start_netsim $container_name
-generate_load_netsim_config $container_name
-connect_sync_netsims $container_name
+    # Creation of the netsim network in the /netsim location of the container if this is the first NED
+    if [ "$is_first_ned" -eq 1 ]; then
+        create_netsim_network $nso_container_name $current_ned
+        is_first_ned=0
+    fi
+
+    # Match a netsim
+    if [[ "$line" =~ ^[[:space:]]*-[[:space:]]*(.+) ]]; then
+        netsim="${BASH_REMATCH[1]}"
+        add_netsim $current_ned $netsim $nso_container_name
+        echo "[🛸] Netsim: $netsim"
+    fi
+done <<< "$topology"
+
+start_netsim $nso_container_name
+generate_load_netsim_config $nso_container_name
+connect_sync_netsims $nso_container_name
 
 echo "[🛸] Loading done!"

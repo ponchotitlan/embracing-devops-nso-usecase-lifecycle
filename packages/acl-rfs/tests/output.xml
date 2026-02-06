@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.1.1 (Python 3.11.9 on linux)" generated="20260206 16:03:16.608" rpa="false" schemaversion="4">
+<suite id="s1" name="Acl-Rfs" source="/nso/run/packages/acl-rfs/tests/acl-rfs.robot">
+<kw name="Set my HTTP Request Header" type="SETUP">
+<doc>Set the headers for NSO REST requests</doc>
+<kw name="Set Headers" library="REST">
+<arg>{ "Authorization": "Basic YWRtaW46YWRtaW4="}</arg>
+<tag>settings</tag>
+<doc>*Sets new request headers or updates the existing.*</doc>
+<status status="PASS" starttime="20260206 16:03:16.826" endtime="20260206 16:03:16.827"/>
+</kw>
+<kw name="Set Headers" library="REST">
+<arg>{ "Accept": "application/yang-data+json"}</arg>
+<tag>settings</tag>
+<doc>*Sets new request headers or updates the existing.*</doc>
+<status status="PASS" starttime="20260206 16:03:16.827" endtime="20260206 16:03:16.827"/>
+</kw>
+<kw name="Set Headers" library="REST">
+<arg>{ "Content-type": "application/yang-data+json"}</arg>
+<tag>settings</tag>
+<doc>*Sets new request headers or updates the existing.*</doc>
+<status status="PASS" starttime="20260206 16:03:16.827" endtime="20260206 16:03:16.827"/>
+</kw>
+<status status="PASS" starttime="20260206 16:03:16.826" endtime="20260206 16:03:16.827"/>
+</kw>
+<test id="s1-t1" name="Create access-list-acl-rfs" line="18">
+<kw name="Get File" library="OperatingSystem">
+<var>${create_acl_payload}</var>
+<arg>input_create.json</arg>
+<doc>Returns the contents of a specified file.</doc>
+<msg timestamp="20260206 16:03:16.828" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/acl-rfs/tests/input_create.json"&gt;/nso/run/packages/acl-rfs/tests/input_create.json&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 16:03:16.829" level="INFO">${create_acl_payload} = {
+  "acl-rfs:access-list-acl-rfs": [
+    {
+      "device": "ciscolive-iosxr-dummy-01",
+      "access_list": [
+        {
+          "name": "test_acl_01",
+          "rule": [
+            {
+             ...</msg>
+<status status="PASS" starttime="20260206 16:03:16.828" endtime="20260206 16:03:16.829"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${create_acl_payload}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260206 16:03:16.829" level="INFO">{
+  "acl-rfs:access-list-acl-rfs": [
+    {
+      "device": "ciscolive-iosxr-dummy-01",
+      "access_list": [
+        {
+          "name": "test_acl_01",
+          "rule": [
+            {
+              "id": "30",
+              "action": "permit",
+              "destination": "172.138.4.50"
+            }
+          ]
+        },
+        {
+          "name": "test_acl_02",
+          "rule": [
+            {
+              "id": "40",
+              "action": "permit",
+              "destination": "185.175.45.8"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}</msg>
+<status status="PASS" starttime="20260206 16:03:16.829" endtime="20260206 16:03:16.829"/>
+</kw>
+<kw name="PATCH" library="REST">
+<var>${result}</var>
+<arg>${url_acl_service}</arg>
+<arg>${create_acl_payload}</arg>
+<tag>http</tag>
+<doc>*Sends a PATCH request to the endpoint.*</doc>
+<msg timestamp="20260206 16:03:18.501" level="INFO">/usr/local/lib/python3.11/site-packages/tzlocal/unix.py:207: UserWarning: Can not find any timezone configuration, defaulting to UTC.
+  warnings.warn("Can not find any timezone configuration, defaulting to UTC.")</msg>
+<msg timestamp="20260206 16:03:18.502" level="INFO">${result} = {'seconds': 0.625707, 'status': 204, 'reason': 'No Content', 'body': '', 'headers': {'Date': 'Fri, 06 Feb 2026 16:03:16 GMT', 'Last-Modified': 'Fri, 06 Feb 2026 16:03:18 GMT', 'Cache-Control': 'privat...</msg>
+<status status="PASS" starttime="20260206 16:03:16.829" endtime="20260206 16:03:18.502"/>
+</kw>
+<kw name="Run" library="OperatingSystem">
+<var>${acl_cdb}</var>
+<arg>echo "show running-config devices device ${test_device_container} config ipv4 access-list" | ncs_cli -Cu admin</arg>
+<doc>Runs the given command in the system and returns the output.</doc>
+<msg timestamp="20260206 16:03:18.505" level="INFO">Running command 'echo "show running-config devices device ciscolive-iosxr-dummy-01 config ipv4 access-list" | ncs_cli -Cu admin 2&gt;&amp;1'.</msg>
+<msg timestamp="20260206 16:03:18.713" level="INFO">${acl_cdb} = devices device ciscolive-iosxr-dummy-01
+ config
+  ipv4 access-list test_acl_01
+   30 permit 172.138.4.50
+  exit
+  ipv4 access-list test_acl_02
+   40 permit 185.175.45.8
+  exit
+ !
+!</msg>
+<status status="PASS" starttime="20260206 16:03:18.502" endtime="20260206 16:03:18.713"/>
+</kw>
+<kw name="Get File" library="OperatingSystem">
+<var>${acl_expected}</var>
+<arg>expected_create.txt</arg>
+<doc>Returns the contents of a specified file.</doc>
+<msg timestamp="20260206 16:03:18.714" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/acl-rfs/tests/expected_create.txt"&gt;/nso/run/packages/acl-rfs/tests/expected_create.txt&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 16:03:18.715" level="INFO">${acl_expected} = devices device ciscolive-iosxr-dummy-01
+ config
+  ipv4 access-list test_acl_01
+   30 permit 172.138.4.50
+  exit
+  ipv4 access-list test_acl_02
+   40 permit 185.175.45.8
+  exit
+ !
+!</msg>
+<status status="PASS" starttime="20260206 16:03:18.714" endtime="20260206 16:03:18.715"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${acl_cdb}</arg>
+<arg>${acl_expected}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" starttime="20260206 16:03:18.715" endtime="20260206 16:03:18.715"/>
+</kw>
+<doc>Create a new access-list-acl-rfs entry</doc>
+<status status="PASS" starttime="20260206 16:03:16.827" endtime="20260206 16:03:18.716"/>
+</test>
+<test id="s1-t2" name="Change access-list-acl-rfs" line="27">
+<kw name="Get File" library="OperatingSystem">
+<var>${create_acl_payload}</var>
+<arg>input_change.json</arg>
+<doc>Returns the contents of a specified file.</doc>
+<msg timestamp="20260206 16:03:18.717" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/acl-rfs/tests/input_change.json"&gt;/nso/run/packages/acl-rfs/tests/input_change.json&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 16:03:18.717" level="INFO">${create_acl_payload} = {
+  "acl-rfs:access-list-acl-rfs": [
+    {
+      "device": "ciscolive-iosxr-dummy-01",
+      "access_list": [
+        {
+          "name": "test_acl_01",
+          "rule": [
+            {
+             ...</msg>
+<status status="PASS" starttime="20260206 16:03:18.716" endtime="20260206 16:03:18.717"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${create_acl_payload}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260206 16:03:18.717" level="INFO">{
+  "acl-rfs:access-list-acl-rfs": [
+    {
+      "device": "ciscolive-iosxr-dummy-01",
+      "access_list": [
+        {
+          "name": "test_acl_01",
+          "rule": [
+            {
+              "id": "30",
+              "action": "permit",
+              "destination": "172.138.4.50"
+            }
+          ]
+        },
+        {
+          "name": "test_acl_02",
+          "rule": [
+            {
+              "id": "40",
+              "action": "deny",
+              "destination": "185.175.45.50"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}</msg>
+<status status="PASS" starttime="20260206 16:03:18.717" endtime="20260206 16:03:18.717"/>
+</kw>
+<kw name="PATCH" library="REST">
+<var>${result}</var>
+<arg>${url_acl_service}</arg>
+<arg>${create_acl_payload}</arg>
+<tag>http</tag>
+<doc>*Sends a PATCH request to the endpoint.*</doc>
+<msg timestamp="20260206 16:03:19.356" level="INFO">${result} = {'seconds': 0.635351, 'status': 204, 'reason': 'No Content', 'body': '', 'headers': {'Date': 'Fri, 06 Feb 2026 16:03:18 GMT', 'Last-Modified': 'Fri, 06 Feb 2026 16:03:19 GMT', 'Cache-Control': 'privat...</msg>
+<status status="PASS" starttime="20260206 16:03:18.717" endtime="20260206 16:03:19.356"/>
+</kw>
+<kw name="Run" library="OperatingSystem">
+<var>${acl_cdb}</var>
+<arg>echo "show running-config devices device ${test_device_container} config ipv4 access-list" | ncs_cli -Cu admin</arg>
+<doc>Runs the given command in the system and returns the output.</doc>
+<msg timestamp="20260206 16:03:19.360" level="INFO">Running command 'echo "show running-config devices device ciscolive-iosxr-dummy-01 config ipv4 access-list" | ncs_cli -Cu admin 2&gt;&amp;1'.</msg>
+<msg timestamp="20260206 16:03:19.520" level="INFO">${acl_cdb} = devices device ciscolive-iosxr-dummy-01
+ config
+  ipv4 access-list test_acl_01
+   30 permit 172.138.4.50
+  exit
+  ipv4 access-list test_acl_02
+   40 deny 185.175.45.50
+  exit
+ !
+!</msg>
+<status status="PASS" starttime="20260206 16:03:19.357" endtime="20260206 16:03:19.520"/>
+</kw>
+<kw name="Get File" library="OperatingSystem">
+<var>${acl_expected}</var>
+<arg>expected_change.txt</arg>
+<doc>Returns the contents of a specified file.</doc>
+<msg timestamp="20260206 16:03:19.520" level="INFO" html="true">Getting file '&lt;a href="file:///nso/run/packages/acl-rfs/tests/expected_change.txt"&gt;/nso/run/packages/acl-rfs/tests/expected_change.txt&lt;/a&gt;'.</msg>
+<msg timestamp="20260206 16:03:19.521" level="INFO">${acl_expected} = devices device ciscolive-iosxr-dummy-01
+ config
+  ipv4 access-list test_acl_01
+   30 permit 172.138.4.50
+  exit
+  ipv4 access-list test_acl_02
+   40 deny 185.175.45.50
+  exit
+ !
+!</msg>
+<status status="PASS" starttime="20260206 16:03:19.520" endtime="20260206 16:03:19.521"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${acl_cdb}</arg>
+<arg>${acl_expected}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" starttime="20260206 16:03:19.521" endtime="20260206 16:03:19.521"/>
+</kw>
+<doc>Change an existing access-list-acl-rfs entry</doc>
+<status status="PASS" starttime="20260206 16:03:18.716" endtime="20260206 16:03:19.522"/>
+</test>
+<doc>This is a very simple Robot test case intended to showcase NSO rfs CRUD interactions
+Target service: acl-rfs</doc>
+<status status="PASS" starttime="20260206 16:03:16.610" endtime="20260206 16:03:19.523"/>
+</suite>
+<statistics>
+<total>
+<stat pass="2" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="2" fail="0" skip="0" id="s1" name="Acl-Rfs">Acl-Rfs</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

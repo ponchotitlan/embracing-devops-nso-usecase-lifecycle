@@ -32,8 +32,8 @@ jobs:
       id: set-outputs
       run: |
         echo "Setting variables ..."
-        echo "::set-output name=DELIVER_ARTIFACTS::${{ github.event.inputs.deliver-artifacts || 'yes' }}"
-        echo "::set-output name=RUN_TESTS::${{ github.event.inputs.run-tests || 'yes' }}"
+        echo "DELIVER_ARTIFACTS=${{ github.event.inputs.deliver-artifacts || 'yes' }}" >> $GITHUB_OUTPUT
+        echo "RUN_TESTS=${{ github.event.inputs.run-tests || 'yes' }}" >> $GITHUB_OUTPUT
 
   build:
     runs-on: self-hosted
@@ -44,9 +44,12 @@ jobs:
 
     - name: 🛠️ Build project
       run: |
-        make run-nso-node
-        make load-neds
-        make load-packages
+        make render
+        make register
+        make build
+        make run
+        make compile
+        make reload
 
   deliver-packages:
     runs-on: self-hosted
@@ -61,7 +64,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ciscolive_demo_packages
-        path: pipeline/preconfigs/ciscolive_demo_packages.tar.gz
+        path: preconfigs/ciscolive_demo_packages.tar.gz
 
   test:
     runs-on: self-hosted
@@ -70,7 +73,7 @@ jobs:
     steps:
     - name: 🤖 Run tests
       run: |
-        make prepare-test-network
+        make netsims
         make run-tests
 
   deliver-tests:
@@ -85,29 +88,74 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ciscolive_demo_tests
-        path: pipeline/preconfigs/ciscolive_demo_test.tar.gz
+        path: preconfigs/ciscolive_demo_test.tar.gz
 
   release:
     runs-on: self-hosted
-    needs: [set-workflow-options,test]
+    needs: [set-workflow-options,deliver-packages,test]
     if: github.ref == 'refs/heads/main' && needs.test.result == 'success' && needs.set-workflow-options.outputs.DELIVER_ARTIFACTS == 'yes'
     steps:
-      - name: ⭐️ Get the latest tag
-        id: get_latest_tag
-        run: make get-current-release-tag
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for proper tag detection
 
-      - name: ⭐️ Increment version
-        id: increment_version
-        run: make calculate-new-release-tag VERSION=${{ env.tag }}
+      - name: ⭐️ Get latest tag and calculate next version
+        id: version
+        run: |
+          # Fetch all tags
+          git fetch --tags
+          
+          # Get the latest tag matching semantic versioning pattern (v1.0.0)
+          LATEST_TAG=$(git tag -l "v*.*.*" | sort -V | tail -n 1)
+          
+          if [ -z "$LATEST_TAG" ]; then
+            # No previous tags, start with v1.0.0
+            NEW_VERSION="v1.0.0"
+            echo "No previous releases found. Starting with $NEW_VERSION"
+          else
+            echo "Latest release: $LATEST_TAG"
+            
+            # Extract version numbers (remove 'v' prefix)
+            VERSION=${LATEST_TAG#v}
+            
+            # Split into major.minor.patch
+            MAJOR=$(echo $VERSION | cut -d. -f1)
+            MINOR=$(echo $VERSION | cut -d. -f2)
+            PATCH=$(echo $VERSION | cut -d. -f3)
+            
+            # Increment patch version (you can change this logic for minor/major bumps)
+            PATCH=$((PATCH + 1))
+            
+            NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+            echo "New version: $NEW_VERSION"
+          fi
+          
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "previous_version=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: 📦 Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ciscolive_demo_packages
+          path: ./artifacts
 
       - name: ⭐️ Create Release and Upload Assets
         uses: softprops/action-gh-release@v1
         with:
-          name: ⭐️ Release v.${{ env.new_version }}
-          tag_name: ${{ env.new_version }}
+          name: ⭐️ Release ${{ steps.version.outputs.new_version }}
+          tag_name: ${{ steps.version.outputs.new_version }}
           body: |
-            🏅 Automated Services Release v.${{ env.new_version }} 🏅
-          files: pipeline/preconfigs/ciscolive_demo_packages.tar.gz
+            🏅 Automated Services Release ${{ steps.version.outputs.new_version }} 🏅
+            
+            **Branch:** ${{ github.ref_name }}
+            **Build:** #${{ github.run_number }}
+            **Commit:** ${{ github.sha }}
+            **Previous Version:** ${{ steps.version.outputs.previous_version || 'None' }}
+            
+            This release includes compiled NSO service packages ready for deployment.
+          files: |
+            ./artifacts/ciscolive_demo_packages.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -6,21 +6,20 @@
 # Usage:
 #   ./clean-resouces.sh
 
-YAML_FILE="pipeline/setup/config.yaml"
+YAML_FILE="config.yaml"
 NEDS_PATH=".netsims"
 
 echo "##### [🧹] Bringing all staging services down .... #####"
 
-# Extract the name of the container
-NSO_DOCKER_NAME_GEN="pipeline/scripts/get-nso-docker-name.sh"
-container_name=$("$NSO_DOCKER_NAME_GEN")
-compose_file="pipeline/setup/docker-compose-${container_name}.yml"
+# Extract the name of the container from docker-compose.yml
+container_name=$(awk '/container_name:/ {print $2; exit}' "docker-compose.yml")
+compose_file="docker-compose.yml"
 
 # Stop all the services of the docker-compose file
 docker compose -f $compose_file down
 
-# Remove the rendered docker-compose file
-rm -rf $compose_file
+# Remove NSO state volume
+docker volume rm -f ${container_name}-etc 2>/dev/null || echo "Volume already removed or doesn't exist"
 
 # Remove the NEDs from the packages/ folder of this repository
 neds=$(yq "$NEDS_PATH" "$YAML_FILE")
@@ -33,9 +32,9 @@ for ned in $neds; do
     fi
 done
 
-# Remove all the files mounted in the mounted volume pipeline/conf except for the file ncs.conf
-rm -rf pipeline/conf/ssh/
-rm -rf pipeline/conf/ssl/
-rm -rf pipeline/conf/ncs.crypto_keys
+# Remove all the files mounted in the mounted volume ncs/ except for the file ncs.conf
+rm -rf ncs/ssh/
+rm -rf ncs/ssl/
+rm -rf ncs/ncs.crypto_keys
 
 echo "[🧹] Clean sweep done!"

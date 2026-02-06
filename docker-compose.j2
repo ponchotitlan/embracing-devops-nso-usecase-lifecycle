@@ -1,0 +1,38 @@
+services:
+  {{ nso-name }}:
+    container_name: {{ nso-name }}
+    image: {{ nso-image }}
+    volumes:
+      - type: bind
+        source: ./packages/
+        target: /nso/run/packages
+      - type: volume
+        source: nso-etc
+        target: /nso/etc
+      - type: bind
+        source: ./ncs/ncs.conf
+        target: /nso/etc/ncs.conf
+        read_only: true
+      - type: bind
+        source: ./preconfigs/
+        target: /tmp/nso
+    environment:
+      - EXTRA_ARGS=--with-package-reload-force
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+    healthcheck:
+      test: ncs_cmd -c "wait-start 2"
+      interval: 5s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+    networks:
+      - dev-netwk
+
+volumes:
+  nso-etc:
+    name: {{ nso-name }}-etc
+
+networks:
+  dev-netwk:
+    driver: bridge
