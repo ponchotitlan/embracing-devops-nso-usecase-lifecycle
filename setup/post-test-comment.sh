@@ -16,8 +16,15 @@ for xml in packages/*/tests/output.xml; do
   fi
 done
 
-echo -e "$SUMMARY" | jq -Rs '{body: .}' | \
-curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-  -H "Accept: application/vnd.github.v3+json" \
-  "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
-  -d @-
+# Only post comment if PR_NUMBER is set (we're in a PR context)
+if [ -n "$PR_NUMBER" ]; then
+  echo "Posting test results to PR #$PR_NUMBER..."
+  echo -e "$SUMMARY" | jq -Rs '{body: .}' | \
+  curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+    -H "Accept: application/vnd.github.v3+json" \
+    "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+    -d @-
+else
+  echo "Not in a PR context, skipping comment."
+  echo -e "$SUMMARY"
+fi

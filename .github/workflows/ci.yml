@@ -2,6 +2,7 @@ name: Cisco Live 🤖🇳🇱 NSO services delivery
 
 on:
   push:
+  pull_request:
   workflow_dispatch:
     inputs:
       run-tests:
@@ -77,7 +78,7 @@ jobs:
         make run-tests
 
     - name: 📊 Comment test results on PR
-      if: always() && github.event_name == 'pull_request'
+      if: always()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_REPOSITORY: ${{ github.repository }}
@@ -87,6 +88,7 @@ jobs:
   deliver-tests:
     runs-on: self-hosted
     needs: test
+    if: always()
     steps:
     - name: 📦 Generate artifacts
       run: |
