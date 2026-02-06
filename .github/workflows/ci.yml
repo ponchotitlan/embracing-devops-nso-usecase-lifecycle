@@ -76,19 +76,6 @@ jobs:
         make netsims
         make run-tests
 
-  ai-test-analysis:
-    runs-on: self-hosted
-    needs: test
-    if: ${{ always() && needs.test.result == 'failure' }}
-    steps:
-    - name: 🧠 Analyze test results with AI
-      env:
-        LLM_PROVIDER: ${{ vars.LLM_PROVIDER || 'claude' }}
-        LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-        LLM_MODEL: ${{ vars.LLM_MODEL || '' }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: make ai-analyze-tests
-
   deliver-tests:
     runs-on: self-hosted
     needs: test

@@ -1,4 +1,4 @@
-.PHONY: all render register build run up compile reload netsims down run-tests ai-analyze-tests create-artifact-packages create-artifact-tests clean deep-clean
+.PHONY: all render register build run up compile reload netsims down run-tests create-artifact-packages create-artifact-tests clean deep-clean
 
 # Makefile for building, creating and cleaning
 # the NSO and CXTA containers for this development environment.
@@ -70,10 +70,6 @@ run-tests:
 	@echo "--- 🤖 Running Robot Framework tests ---"
 	./setup/install-testing-libraries.sh
 	./setup/run-robot-tests.sh
-
-ai-analyze-tests:
-	@echo "--- 🧠 Analyzing test results with AI ---"
-	./setup/run-ai-analysis.sh
 
 create-artifact-packages:
 	./setup/create-artifact-packages.sh
