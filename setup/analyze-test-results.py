@@ -69,7 +69,7 @@ def parse_robot_output_xml(xml_path: str) -> Dict:
         return None
 
 
-def analyze_with_claude(test_results: List[Dict], api_key: str, model: str = "claude-3-5-sonnet-20241022") -> str:
+def analyze_with_claude(test_results: List[Dict], api_key: str, model: str = "claude-3-5-sonnet-latest") -> str:
     """Send test results to Claude for analysis."""
     try:
         import anthropic
@@ -289,7 +289,7 @@ def main():
     print(f"\n🤖 Analyzing results with {llm_provider.upper()}...")
     
     if llm_provider == 'claude':
-        model = llm_model or "claude-3-5-sonnet-20241022"
+        model = llm_model or "claude-3-5-sonnet-latest"
         analysis = analyze_with_claude(all_results, llm_api_key, model)
     elif llm_provider in ['openai', 'gpt']:
         model = llm_model or "gpt-4"
