@@ -54,9 +54,12 @@ echo "📦 Installing AI analysis dependencies..."
 pip install --quiet --upgrade pip
 pip install --quiet anthropic openai requests
 
-# Run the analysis script
+# Clear Python cache to ensure latest code is used
+find "$SCRIPT_DIR" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+
+# Run the analysis script (with -B to avoid writing bytecode cache)
 echo "🧠 Running AI analysis..."
-python3 "$SCRIPT_DIR/analyze-test-results.py"
+python3 -B "$SCRIPT_DIR/analyze-test-results.py"
 
 # Deactivate virtual environment
 deactivate
