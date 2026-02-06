@@ -9,6 +9,7 @@ ncs/ncs.crypto_keys
 
 # Ignoring virtual environment .venv
 .venv/
+venv-ai-analysis/
 
 #Ignoring cache and build artifacts
 __pycache__/

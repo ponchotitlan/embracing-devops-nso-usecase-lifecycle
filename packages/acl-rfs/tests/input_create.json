@@ -7,7 +7,7 @@
           "name": "test_acl_01",
           "rule": [
             {
-              "id": "30",
+              "id": "30_ACL",
               "action": "permit",
               "destination": "172.138.4.50"
             }
@@ -17,7 +17,7 @@
           "name": "test_acl_02",
           "rule": [
             {
-              "id": "40",
+              "id": "40_ACL",
               "action": "permit",
               "destination": "185.175.45.8"
             }

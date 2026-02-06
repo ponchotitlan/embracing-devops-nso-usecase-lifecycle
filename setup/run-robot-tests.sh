@@ -57,6 +57,10 @@ for package in "${all_packages[@]}"; do
         if [[ $this_test_pass == 0 ]]; then
             all_tests_passed=0
         fi
+        
+        # Copy output.xml from container to host for AI analysis
+        echo "📥 Copying test results for $package..."
+        docker cp "$container_name:/nso/run/packages/$package/tests/output.xml" "$PACKAGES_DIR/$package/tests/output.xml" 2>/dev/null || echo "⚠️  No output.xml found for $package"
     fi
 done
 
