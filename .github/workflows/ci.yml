@@ -183,4 +183,4 @@ jobs:
     - name: 🧹 Cleanup resources
       run: |
         make render
-        make clean
+        make deep-clean
