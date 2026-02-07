@@ -78,7 +78,7 @@ jobs:
         make run-tests
 
     - name: 🤖 Analyze test results with AI and comment on PR
-      if: always()
+      if: failure()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_REPOSITORY: ${{ github.repository }}

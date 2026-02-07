@@ -6,8 +6,8 @@
           {
             "name": "test_vty_01",
             "ip-group": "vty01",
-            "session-timeout": "5s",
-            "exec-timeout": "10s",
+            "session-timeout": "5",
+            "exec-timeout": "10",
             "transport-input": "ssh",
             "transport-output": "telnet"
           }

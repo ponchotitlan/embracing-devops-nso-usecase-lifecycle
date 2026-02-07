@@ -159,20 +159,21 @@ def main():
         print(f"Error parsing XML file: {e}")
         return 1
     
+    # Check if all tests passed
+    if results['failed'] == 0 and results['total_tests'] > 0:
+        print(f"✅ All {results['total_tests']} tests passing")
+        return 0
+    
     # Format results for summary
     results_text = format_results_for_claude(results)
     print("\n" + results_text)
     
     # Analyze with Claude using complete XML
-    print("\nAnalyzing complete test results with Claude API...")
-    print("=" * 80)
+    print("\nAnalyzing failed tests with Claude API...")
     
     try:
         analysis = analyze_with_claude(xml_content, results_text, api_key)
-        print("\nClaude Analysis:")
-        print("=" * 80)
-        print(analysis)
-        print("=" * 80)
+        print("\n" + analysis)
     except Exception as e:
         print(f"Error calling Claude API: {e}")
         return 1

@@ -27,18 +27,18 @@ if [ -z "$XML_FILES" ]; then
 fi
 
 # Analyze each XML file and combine results
-echo "# 🤖 AI Test Analysis Report" > combined_analysis.md
-echo "" >> combined_analysis.md
-echo "_Powered by Claude API_" >> combined_analysis.md
+echo "### 🤖 Test Analysis" > combined_analysis.md
 echo "" >> combined_analysis.md
 
 for xml_file in $XML_FILES; do
   echo "Analyzing $xml_file..."
-  echo "## 📋 Analysis of \`$xml_file\`" >> combined_analysis.md
+  
+  # Get the service name from the path (e.g., packages/acl-rfs/tests/output.xml -> acl-rfs)
+  service_name=$(echo "$xml_file" | sed 's|packages/\([^/]*\)/tests/output.xml|\1|')
+  
+  echo "**$service_name**" >> combined_analysis.md
   echo "" >> combined_analysis.md
-  python setup/ai_test_analysis.py "$xml_file" >> combined_analysis.md 2>&1 || echo "⚠️ Analysis failed for $xml_file" >> combined_analysis.md
-  echo "" >> combined_analysis.md
-  echo "---" >> combined_analysis.md
+  python setup/ai_test_analysis.py "$xml_file" >> combined_analysis.md 2>&1 || echo "⚠️ Analysis failed" >> combined_analysis.md
   echo "" >> combined_analysis.md
 done
 
