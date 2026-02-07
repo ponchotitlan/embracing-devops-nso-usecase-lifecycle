@@ -77,13 +77,14 @@ jobs:
         make netsims
         make run-tests
 
-    - name: 📊 Comment test results on PR
+    - name: 🤖 Analyze test results with AI and comment on PR
       if: always()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_REPOSITORY: ${{ github.repository }}
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
-      run: ./setup/post-test-comment.sh
+      run: ./setup/ai-test-analysis.sh
 
   deliver-tests:
     runs-on: self-hosted
