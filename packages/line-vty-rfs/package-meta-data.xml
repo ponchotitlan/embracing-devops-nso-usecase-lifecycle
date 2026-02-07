@@ -1,6 +1,6 @@
 <ncs-package xmlns="http://tail-f.com/ns/ncs-packages">
   <name>line-vty-rfs</name>
-  <package-version>1.0</package-version>
+  <package-version>1.1</package-version>
   <description>Dummy Live VTY RFS package for demo purposes</description>
   <ncs-min-version>6.0</ncs-min-version>
 
